@@ -4,9 +4,14 @@ Sistema de control de inventario para pequenas y medianas empresas.
 Proyecto de la asignatura **APTC106 - Taller de Desarrollo Web y Movil**,
 Universidad Andres Bello.
 
-**Mockup de la aplicacion movil:** https://USUARIO.github.io/stockcontrol/
+**Prototipos publicados:** https://sjaradev.github.io/stockcontrol/
 
-> Reemplaza `USUARIO` por tu nombre de usuario de GitHub una vez publicado el sitio.
+| Prototipo | Enlace directo |
+|---|---|
+| Plataforma web | https://sjaradev.github.io/stockcontrol/web.html |
+| Aplicacion movil | https://sjaradev.github.io/stockcontrol/movil.html |
+
+**Cuenta de prueba en ambos:** usuario `demo` / contrasena `demo`
 
 ---
 
@@ -15,44 +20,74 @@ Universidad Andres Bello.
 Muchas empresas todavia controlan su bodega con planillas o anotaciones en papel.
 Eso provoca diferencias de stock, compras duplicadas y poca claridad sobre donde
 esta cada articulo. StockControl propone una solucion con dos canales conectados a
-una misma base de datos:
+la misma informacion:
 
 - **Plataforma web:** administracion de articulos, categorias, usuarios e indicadores.
+  Pensada para pantallas grandes y sesiones largas de trabajo.
 - **Aplicacion movil:** registro de movimientos en la bodega mediante escaneo de
-  codigos de barra o QR.
+  codigos de barra o QR. Pensada para usarse de pie y con una sola mano.
 
-## Contenido del repositorio
+## Como se integran los dos canales
 
-| Carpeta | Descripcion |
-|---|---|
-| `index.html` | Mockup navegable de la aplicacion movil (se publica en GitHub Pages). |
-| `assets/css/` | Hoja de estilos del prototipo. |
-| `assets/js/` | Navegacion entre pantallas del prototipo. |
-| `backend/` | Aplicacion web CRUD desarrollada con Django (Sumativa 2). |
-| `docs/` | Documentacion e imagenes del proyecto. |
+La web y el movil no son dos sistemas separados: son dos formas de entrar al mismo
+sistema.
+
+```
+App movil  ──┐
+             ├── API REST ── Base de datos ── Plataforma web
+Plataforma  ─┘
+```
+
+El recorrido de una operacion es:
+
+1. El operario escanea el codigo del articulo con la camara del telefono.
+2. La API valida su identidad, sus permisos y que exista stock suficiente.
+3. El movimiento se guarda una sola vez, con usuario, fecha, ubicacion y origen.
+4. El dato aparece de inmediato en los indicadores de la plataforma web.
+
+Como consecuencia de este diseno:
+
+- **Una sola base de datos:** el stock nunca queda distinto entre lo que ve el
+  operario y lo que revisa el supervisor.
+- **Las mismas cuentas:** un usuario sirve para los dos canales; lo que cambia son
+  los permisos segun el rol.
+- **Origen identificado:** cada movimiento indica si se registro desde el movil o
+  desde la web. En el prototipo web esto se ve en la columna *Origen*.
 
 ---
 
-## Mockup movil (prototipo navegable)
+## Contenido del repositorio
 
-El prototipo simula la aplicacion movil y permite recorrer todas las pantallas y su
-navegacion. Todavia **no tiene logica de negocio ni conexion a la base de datos**:
-su proposito es validar los flujos y el diseno antes de programar la app real.
+| Archivo o carpeta | Descripcion |
+|---|---|
+| `index.html` | Pagina de inicio con acceso a los dos prototipos. |
+| `web.html` | Mockup navegable de la plataforma web. |
+| `movil.html` | Mockup navegable de la aplicacion movil. |
+| `assets/css/` | Hojas de estilo de cada prototipo. |
+| `assets/js/` | Navegacion entre pantallas de cada prototipo. |
+| `backend/` | Plataforma web CRUD desarrollada con Django. |
+| `docs/` | Capturas de pantalla de los prototipos. |
 
-Pantallas incluidas:
+---
 
-1. **Inicio de sesion** - acceso del personal de bodega.
-2. **Inicio** - indicadores del dia y accesos rapidos.
-3. **Articulos** - listado con buscador y filtros por categoria.
-4. **Detalle del articulo** - stock, ubicacion e historial.
-5. **Escaner** - lectura simulada de codigo de barra o QR.
-6. **Registrar movimiento** - entrada, salida o traslado.
-7. **Confirmacion** - comprobante del movimiento registrado.
-8. **Movimientos** - historial con filtros.
-9. **Alertas** - articulos bajo el minimo o sin stock.
-10. **Perfil** - datos del usuario y cierre de sesion.
+## Prototipos
 
-### Verlo en tu computador
+Ambos son navegables y estan hechos con HTML, CSS y JavaScript, sin librerias
+externas. Todavia **no tienen logica de negocio ni conexion a la base de datos**:
+su proposito es validar los flujos y el diseno antes de programar.
+
+### Plataforma web (`web.html`)
+
+Panel principal con indicadores, administracion de articulos, detalle con historial,
+listado de movimientos, alertas de stock y gestion de usuarios.
+
+### Aplicacion movil (`movil.html`)
+
+Diez pantallas: inicio de sesion, inicio con indicadores, listado de articulos,
+detalle del articulo, escaner de codigos, registro de movimiento, confirmacion,
+historial, alertas y perfil.
+
+### Verlos en tu computador
 
 Como es un sitio estatico, basta con abrir `index.html` en el navegador.
 Tambien puedes levantar un servidor local:
@@ -87,31 +122,14 @@ Luego entra a http://127.0.0.1:8000
 > porque cada articulo pertenece a una categoria.
 
 > GitHub Pages solo publica sitios estaticos, por lo que el backend Django no se
-> ejecuta ahi. En Pages se publica el mockup movil; el backend se ejecuta de forma
+> ejecuta ahi. En Pages se publican los prototipos; el backend se ejecuta de forma
 > local o en un servicio que soporte Python.
-
----
-
-## Integracion movil / web
-
-Ambos canales se comunican con una API REST sobre HTTPS conectada a una base de
-datos comun:
-
-```
-App movil  ──┐
-             ├── API REST ── Base de datos ── Plataforma web
-Plataforma  ─┘
-```
-
-Cuando un operario registra un movimiento desde el telefono, la API valida el
-usuario, sus permisos y el stock disponible antes de guardar. Una vez confirmado,
-el dato queda inmediatamente disponible para los supervisores en la plataforma web.
 
 ---
 
 ## Tecnologias
 
-- HTML5, CSS3 y JavaScript (sin librerias externas) para el mockup movil.
+- HTML5, CSS3 y JavaScript (sin librerias externas) para los prototipos.
 - Python y Django para la plataforma web.
 - SQLite como base de datos de desarrollo.
 - Git y GitHub para el control de versiones y la publicacion.

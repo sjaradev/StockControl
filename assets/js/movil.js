@@ -72,6 +72,52 @@
     }, 2600);
   }
 
+  /* ---------- Inicio de sesion ---------- */
+  var USUARIO = "demo";
+  var CLAVE = "demo";
+
+  var campoUsuario = document.getElementById("muser");
+  var campoClave = document.getElementById("mpass");
+  var errorLogin = document.getElementById("merr");
+  var botonEntrar = document.getElementById("menter");
+
+  function mostrarError(mensaje) {
+    errorLogin.textContent = mensaje;
+    errorLogin.classList.add("show");
+  }
+
+  function validarAcceso() {
+    var u = campoUsuario.value.trim();
+    var c = campoClave.value;
+
+    if (!u || !c) {
+      mostrarError("Completa el usuario y la contrasena.");
+      return;
+    }
+    if (u !== USUARIO || c !== CLAVE) {
+      mostrarError("Usuario o contrasena incorrecta. Usa demo / demo.");
+      return;
+    }
+
+    errorLogin.classList.remove("show");
+    ir("home");
+    avisar("Sesion iniciada correctamente");
+  }
+
+  if (botonEntrar) {
+    botonEntrar.addEventListener("click", validarAcceso);
+  }
+
+  [campoUsuario, campoClave].forEach(function (campo) {
+    if (!campo) return;
+    campo.addEventListener("input", function () {
+      errorLogin.classList.remove("show");
+    });
+    campo.addEventListener("keydown", function (e) {
+      if (e.key === "Enter") validarAcceso();
+    });
+  });
+
   /* ---------- Clicks con data-go ---------- */
   document.addEventListener("click", function (e) {
     var destino = e.target.closest("[data-go]");
