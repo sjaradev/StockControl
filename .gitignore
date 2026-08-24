@@ -1,0 +1,23 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+env/
+venv/
+.venv/
+
+# Base de datos local
+*.sqlite3
+db.sqlite3
+
+# Configuracion de editores
+.vscode/
+.idea/
+*.swp
+
+# Sistema operativo
+.DS_Store
+Thumbs.db
+
+# Archivos de entorno
+.env

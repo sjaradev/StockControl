@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>StockControl</title>
+<style>
+  * { box-sizing: border-box; }
+  body { font-family: Arial, Helvetica, sans-serif; margin:0; background:#f4f6f6; color:#212121; }
+  .nav { background:#00695c; color:#fff; padding:14px 24px; display:flex; align-items:center; gap:20px; }
+  .nav a { color:#fff; text-decoration:none; }
+  .nav a:hover { text-decoration:underline; }
+  .nav .brand { font-weight:bold; font-size:20px; margin-right:auto; }
+  .container { max-width:900px; margin:24px auto; padding:0 16px; }
+  table { width:100%; border-collapse:collapse; background:#fff; box-shadow:0 1px 3px rgba(0,0,0,.1); }
+  th, td { text-align:left; padding:10px 12px; border-bottom:1px solid #e0e0e0; }
+  th { background:#e0f2f1; }
+  tr:nth-child(even) td { background:#fafafa; }
+  .btn { display:inline-block; background:#00695c; color:#fff; padding:8px 14px; border:none; border-radius:4px; text-decoration:none; cursor:pointer; font-size:14px; }
+  .btn:hover { opacity:.9; }
+  .btn.red { background:#c62828; }
+  .btn.grey { background:#607d8b; }
+  .actions a { margin-right:8px; }
+  .card { background:#fff; padding:20px 24px; border-radius:6px; max-width:520px; box-shadow:0 1px 3px rgba(0,0,0,.1); }
+  form p { margin:12px 0; }
+  label { display:block; font-size:13px; color:#555; margin-bottom:4px; }
+  input, select, textarea { width:100%; padding:8px; border:1px solid #ccc; border-radius:4px; font-size:14px; }
+  .msg { background:#c62828; color:#fff; padding:10px; border-radius:4px; margin-bottom:12px; }
+  h2 { color:#00695c; }
+  .top { display:flex; align-items:center; margin-bottom:16px; }
+  .top h2 { margin:0; margin-right:auto; }
+</style>
+</head>
+<body>
+{% if user.is_authenticated %}
+<div class="nav">
+  <a class="brand" href="{% url 'inventario:lista' %}">StockControl</a>
+  <a href="{% url 'inventario:lista' %}">Articulos</a>
+  <a href="{% url 'inventario:categorias' %}">Categorias</a>
+  <a href="{% url 'inventario:logout' %}">Salir</a>
+</div>
+{% endif %}
+<div class="container">
+  {% block contenido %}{% endblock %}
+</div>
+</body>
+</html>

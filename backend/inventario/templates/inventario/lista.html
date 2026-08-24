@@ -1,0 +1,29 @@
+{% extends 'inventario/base.html' %}
+{% block contenido %}
+<div class="top">
+  <h2>Articulos en inventario</h2>
+  <a class="btn" href="{% url 'inventario:crear' %}">+ Agregar nuevo</a>
+</div>
+{% if not articulos %}
+  <p>No hay articulos todavia. Usa "Agregar nuevo" para crear el primero.</p>
+  <p style="color:#555;">Antes de crear un articulo necesitas al menos una
+     <a href="{% url 'inventario:categoria_crear' %}">categoria</a>.</p>
+{% else %}
+<table>
+  <tr><th>Nombre</th><th>Codigo</th><th>Stock</th><th>Ubicacion</th><th>Opciones</th></tr>
+  {% for a in articulos %}
+  <tr>
+    <td>{{ a.nombre }}</td>
+    <td>{{ a.codigo }}</td>
+    <td>{{ a.stock }}</td>
+    <td>{{ a.ubicacion }}</td>
+    <td class="actions">
+      <a href="{% url 'inventario:detalle' a.pk %}">Ver</a>
+      <a href="{% url 'inventario:editar' a.pk %}">Editar</a>
+      <a href="{% url 'inventario:eliminar' a.pk %}">Eliminar</a>
+    </td>
+  </tr>
+  {% endfor %}
+</table>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,12 @@
+{% extends 'inventario/base.html' %}
+{% block contenido %}
+<h2>Eliminar articulo</h2>
+<div class="card">
+  <p>Estas seguro de que quieres eliminar "<b>{{ articulo.nombre }}</b>"?</p>
+  <form method="post">
+    {% csrf_token %}
+    <button class="btn red" type="submit">Si, eliminar</button>
+    <a class="btn grey" href="{% url 'inventario:lista' %}">Cancelar</a>
+  </form>
+</div>
+{% endblock %}

@@ -1,0 +1,15 @@
+{% extends 'inventario/base.html' %}
+{% block contenido %}
+<div style="text-align:center; margin-top:40px;">
+  <h2>StockControl</h2>
+  <p>Ingresa para gestionar el inventario</p>
+</div>
+<div class="card" style="margin:20px auto;">
+  {% if error %}<div class="msg">{{ error }}</div>{% endif %}
+  <form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button class="btn" type="submit">Entrar</button>
+  </form>
+</div>
+{% endblock %}
