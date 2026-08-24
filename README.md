@@ -4,9 +4,7 @@ Sistema de control de inventario para pequenas y medianas empresas.
 Proyecto de la asignatura **APTC106 - Taller de Desarrollo Web y Movil**,
 Universidad Andres Bello.
 
-**Mockup de la aplicacion movil:** https://USUARIO.github.io/stockcontrol/
-
-> Reemplaza `USUARIO` por tu nombre de usuario de GitHub una vez publicado el sitio.
+**Mockup de la aplicacion movil:** https://sjaradev.github.io/stockcontrol/
 
 ---
 
