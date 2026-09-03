@@ -118,8 +118,8 @@ python manage.py runserver
 
 Luego entra a http://127.0.0.1:8000
 
-> **Importante:** antes de crear un articulo debes crear al menos una categoría,
-> porque cada articulo pertenece a una categoría.
+> **Importante:** antes de crear un articulo debes crear al menos una categoría y una ubicación,
+> porque cada articulo pertenece a una categoría y se almacena en una ublicación.
 
 > GitHub Pages solo publica sitios estáticos, por lo que el backend Django no se
 > ejecuta ahí. En Pages se publican los prototipos; el backend se ejecuta de forma
