@@ -29,16 +29,29 @@
   h2 { color:#00695c; }
   .top { display:flex; align-items:center; margin-bottom:16px; }
   .top h2 { margin:0; margin-right:auto; }
+  .logout-form { margin: 0;}
+  .logout-button { padding: 0; border: 0; background: transparent; color: #fff; cursor: pointer; font: inherit;}
+  .logout-button:hover { text-decoration: underline; }  
 </style>
 </head>
 <body>
-{% if user.is_authenticated %}
-<div class="nav">
-  <a class="brand" href="{% url 'inventario:lista' %}">StockControl</a>
-  <a href="{% url 'inventario:lista' %}">Articulos</a>
-  <a href="{% url 'inventario:categorias' %}">Categorias</a>
-  <a href="{% url 'inventario:logout' %}">Salir</a>
-</div>
+{% if not hide_nav %}
+  {% if user.is_authenticated or static_export %}
+  <div class="nav">
+    <a class="brand" href="{{ pages_prefix }}{% url 'inventario:articulo_lista' %}">StockControl</a>
+    <a href="{{ pages_prefix }}{% url 'inventario:articulo_lista' %}">Artículos</a>
+    <a href="{{ pages_prefix }}{% url 'inventario:categoria_lista' %}">Categorías</a>
+    <a href="{{ pages_prefix }}{% url 'inventario:ubicacion_lista' %}">Ubicaciones</a>
+    {% if static_export %}
+      <a href="{{ pages_prefix }}{% url 'inventario:login' %}">Salir</a>
+    {% else %}
+      <form method="post" action="{{ pages_prefix }}{% url 'inventario:logout' %}" class="logout-form">
+        {% csrf_token %}
+	      <button type="submit" class="logout-button">Salir</button>
+      </form>
+    {% endif %}
+  </div>
+  {% endif %}
 {% endif %}
 <div class="container">
   {% block contenido %}{% endblock %}

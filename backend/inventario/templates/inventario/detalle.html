@@ -2,14 +2,16 @@
 {% block contenido %}
 <h2>{{ articulo.nombre }}</h2>
 <div class="card">
-  <p><b>Codigo de barra / QR:</b> {{ articulo.codigo }}</p>
-  <p><b>Categoria:</b> {{ articulo.categoria }}</p>
+  <p><b>Código de barra:</b> {{ articulo.codigo }}</p>
+  <p><b>Categoría:</b> {{ articulo.categoria }}</p>
   <p><b>Stock disponible:</b> {{ articulo.stock }}</p>
-  <p><b>Ubicacion / Bodega:</b> {{ articulo.ubicacion }}</p>
-  <p><b>Descripcion:</b> {{ articulo.descripcion }}</p>
+  <p><b>Ubicación:</b> {{ articulo.ubicacion }}</p>
+  <p><b>Descripción:</b> {{ articulo.descripcion }}</p>
   <p><b>Creado:</b> {{ articulo.creado }}</p>
-  <p><b>Ultima actualizacion:</b> {{ articulo.actualizado }}</p>
-  <a class="btn" href="{% url 'inventario:editar' articulo.pk %}">Editar</a>
-  <a class="btn grey" href="{% url 'inventario:lista' %}">Volver</a>
+  <p><b>Última actualización:</b> {{ articulo.actualizado }}</p>
+  {% if not static_export %}
+  <a class="btn" href="{{ pages_prefix }}{% url 'inventario:articulo_editar' articulo.pk %}">Editar</a>
+  {% endif %}
+  <a class="btn grey" href="{{ pages_prefix }}{% url 'inventario:articulo_lista' %}">Volver</a>
 </div>
 {% endblock %}

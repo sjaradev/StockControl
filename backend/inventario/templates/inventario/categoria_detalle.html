@@ -1,0 +1,31 @@
+{% extends 'inventario/base.html' %}
+
+{% block contenido %}
+<h2>{{ categoria.nombre }}</h2>
+
+<div class="card">
+  <p>
+    <b>Descripción:</b>
+    {{ categoria.descripcion|default:"Sin descripción" }}
+  </p>
+
+  <p>
+    <b>Artículos asociados:</b>
+    {{ categoria.articulos.count }}
+  </p>
+
+  <p>
+    <b>Creada:</b>
+    {{ categoria.creado }}
+  </p>
+
+  <p>
+    <b>Última actualización:</b>
+    {{ categoria.actualizado }}
+  </p>
+  {% if not static_export %}
+  <a class="btn" href="{{ pages_prefix }}{% url 'inventario:categoria_editar' categoria.pk %}">Editar</a>
+  {% endif %}
+  <a class="btn grey" href="{{ pages_prefix }}{% url 'inventario:categoria_lista' %}" >Volver</a>
+</div>
+{% endblock %}

@@ -1,17 +1,41 @@
 {% extends 'inventario/base.html' %}
 {% block contenido %}
 <div class="top">
-  <h2>Categorias</h2>
-  <a class="btn" href="{% url 'inventario:categoria_crear' %}">+ Nueva categoria</a>
+  <h2>Categorías</h2>
+  {% if not static_export %}
+  <a class="btn" href="{{ pages_prefix }}{% url 'inventario:categoria_crear' %}">+ Nueva categoría</a>
+  {% endif %}
 </div>
 {% if not categorias %}
-  <p>No hay categorias todavia.</p>
+  <p>No hay categorías todavía.</p>
 {% else %}
 <table>
-  <tr><th>Nombre</th><th>Descripcion</th></tr>
-  {% for c in categorias %}
-  <tr><td>{{ c.nombre }}</td><td>{{ c.descripcion }}</td></tr>
-  {% endfor %}
+  <thead>
+    <tr>
+      <th>Nombre</th>
+      <th>Descripción</th>
+      <th>Artículos</th>
+      <th>Opciones</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    {% for c in categorias %}
+    <tr>
+      <td>{{ c.nombre }}</td>
+      <td>{{ c.descripcion|default:"—" }}</td>
+      <td>{{ c.articulos.count }}</td>
+
+      <td class="actions">
+        <a href="{{ pages_prefix }}{% url 'inventario:categoria_detalle' c.pk %}">Ver</a>
+        {% if not static_export %}
+        <a href="{{ pages_prefix }}{% url 'inventario:categoria_editar' c.pk %}">Editar</a>
+        <a href="{{ pages_prefix }}{% url 'inventario:categoria_eliminar' c.pk %}">Eliminar</a>
+        {% endif %}
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
 </table>
 {% endif %}
 {% endblock %}

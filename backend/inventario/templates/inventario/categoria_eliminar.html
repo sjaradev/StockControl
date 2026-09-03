@@ -1,0 +1,38 @@
+{% extends 'inventario/base.html' %}
+
+{% block contenido %}
+<h2>Eliminar categoría</h2>
+
+<div class="card">
+  {% if error %}
+    <div class="msg">
+      {{ error }}
+    </div>
+  {% endif %}
+
+  <p>
+    ¿Estás seguro de que quieres eliminar
+    "<strong>{{ categoria.nombre }}</strong>"?
+  </p>
+
+  {% if categoria.articulos.exists %}
+    <p>Esta categoría tiene artículos asociados y no puede eliminarse.</p>
+    <p>Primero debes editar esos artículos y trasladarlos a otra categoría.</p>
+  {% else %}
+    <form method="post">
+      {% csrf_token %}
+
+      <button class="btn red" type="submit">
+        Sí, eliminar
+      </button>
+    </form>
+  {% endif %}
+
+  <a
+    class="btn grey"
+    href="{{ pages_prefix }}{% url 'inventario:categoria_lista' %}"
+  >
+    Cancelar
+  </a>
+</div>
+{% endblock %}

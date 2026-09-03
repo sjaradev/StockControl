@@ -1,0 +1,100 @@
+[
+{
+  "model": "inventario.categoria",
+  "pk": 1,
+  "fields": {
+    "nombre": "Carpinteria",
+    "descripcion": "uso de carpintero",
+    "creado": "2026-07-28T04:52:48.862Z",
+    "actualizado": "2026-07-28T06:53:26.564Z"
+  }
+},
+{
+  "model": "inventario.categoria",
+  "pk": 2,
+  "fields": {
+    "nombre": "Albañilería",
+    "descripcion": "para albañil",
+    "creado": "2026-07-28T06:53:18.077Z",
+    "actualizado": "2026-07-28T06:53:18.077Z"
+  }
+},
+{
+  "model": "inventario.categoria",
+  "pk": 3,
+  "fields": {
+    "nombre": "Obra Gruesa",
+    "descripcion": "",
+    "creado": "2026-07-28T07:03:55.939Z",
+    "actualizado": "2026-07-28T07:04:19.085Z"
+  }
+},
+{
+  "model": "inventario.categoria",
+  "pk": 4,
+  "fields": {
+    "nombre": "Terminaciones",
+    "descripcion": "",
+    "creado": "2026-07-28T07:04:07.211Z",
+    "actualizado": "2026-07-28T07:04:27.271Z"
+  }
+},
+{
+  "model": "inventario.ubicacion",
+  "pk": 1,
+  "fields": {
+    "nombre": "Bodega 1",
+    "descripcion": "norte",
+    "creado": "2026-07-28T04:55:02.280Z",
+    "actualizado": "2026-07-28T06:54:19.255Z"
+  }
+},
+{
+  "model": "inventario.ubicacion",
+  "pk": 2,
+  "fields": {
+    "nombre": "Bodega 2",
+    "descripcion": "centro",
+    "creado": "2026-07-28T06:54:10.903Z",
+    "actualizado": "2026-07-28T06:54:10.903Z"
+  }
+},
+{
+  "model": "inventario.ubicacion",
+  "pk": 3,
+  "fields": {
+    "nombre": "Bodega 3",
+    "descripcion": "Sur",
+    "creado": "2026-07-28T06:54:30.665Z",
+    "actualizado": "2026-07-28T06:54:30.665Z"
+  }
+},
+{
+  "model": "inventario.articulo",
+  "pk": 1,
+  "fields": {
+    "nombre": "martillo",
+    "codigo": "0578934684346",
+    "descripcion": "martillo carpintero",
+    "stock": 120,
+    "ubicacion": 1,
+    "categoria": 1,
+    "creado": "2026-07-28T04:56:02.290Z",
+    "actualizado": "2026-07-28T04:56:02.290Z"
+  }
+},
+{
+  "model": "inventario.articulo",
+  "pk": 3,
+  "fields": {
+    "nombre": "pala",
+    "codigo": "546577978996",
+    "descripcion": "pala maestro",
+    "stock": 50,
+    "ubicacion": 2,
+    "categoria": 3,
+    "creado": "2026-07-28T07:05:17.508Z",
+    "actualizado": "2026-07-28T07:05:17.508Z"
+  }
+}
+]

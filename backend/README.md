@@ -1,7 +1,7 @@
 # StockControl - CRUD web (APTC106 - Sumativa 2)
 
 Aplicacion web CRUD para el control de inventario, adaptada del ejemplo de
-clases. Permite iniciar sesion y administrar articulos y categorias
+clases. Permite iniciar sesion y administrar articulos, categorias y ubicaciones
 (Crear, Leer, Actualizar y Eliminar).
 
 ## Requisitos
@@ -34,13 +34,14 @@ clases. Permite iniciar sesion y administrar articulos y categorias
 8. Abrir en el navegador: http://127.0.0.1:8000/
 
 ## Importante
-Antes de crear un articulo debes crear al menos una CATEGORIA
-(menu "Categorias" -> "Nueva categoria"), porque cada articulo
-pertenece a una categoria.
+Antes de crear un artículo debes crear al menos una CATEGORIA
+(menu "Categorías" -> "Nueva categoria") y una UBICACION
+(menu "Ubicación" -> "Nueva ubicación"), porque cada artículo
+pertenece a una categoría y tiene una ubicación.
 
 ## Estructura
-- inventario/models.py    -> modelos Categoria y Articulo
+- inventario/models.py    -> modelos Categoria, Ubicacion y Articulo
 - inventario/views.py     -> vistas CRUD (basadas en funciones)
-- inventario/urls.py      -> rutas de la aplicacion
+- inventario/urls.py      -> rutas de la aplicación
 - inventario/templates/   -> plantillas HTML
-- config/settings.py      -> configuracion del proyecto
+- config/settings.py      -> configuración del proyecto

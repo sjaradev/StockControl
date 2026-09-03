@@ -1,0 +1,38 @@
+{% extends 'inventario/base.html' %}
+
+{% block contenido %}
+<h2>Eliminar ubicación</h2>
+
+<div class="card">
+  {% if error %}
+    <div class="msg">
+      {{ error }}
+    </div>
+  {% endif %}
+
+  <p>
+    ¿Estás seguro de que quieres eliminar
+    "<strong>{{ ubicacion.nombre }}</strong>"?
+  </p>
+
+  {% if ubicacion.articulos.exists %}
+    <p>Esta ubicación tiene artículos asociados y no puede eliminarse.</p>
+    <p>Primero debes editar esos artículos y trasladarlos a otra ubicación.</p>
+  {% else %}
+    <form method="post">
+      {% csrf_token %}
+
+      <button class="btn red" type="submit">
+        Sí, eliminar
+      </button>
+    </form>
+  {% endif %}
+
+  <a
+    class="btn grey"
+    href="{{ pages_prefix }}{% url 'inventario:ubicacion_lista' %}"
+  >
+    Cancelar
+  </a>
+</div>
+{% endblock %}

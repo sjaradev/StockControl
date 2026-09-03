@@ -6,7 +6,7 @@
     {% csrf_token %}
     {{ form.as_p }}
     <button class="btn" type="submit">Guardar</button>
-    <a class="btn grey" href="{% url 'inventario:lista' %}">Cancelar</a>
+    <a class="btn grey" href="{{ pages_prefix }}{% url cancelar_url %}">Cancelar</a>
   </form>
 </div>
 {% endblock %}

@@ -1,26 +1,35 @@
 {% extends 'inventario/base.html' %}
 {% block contenido %}
 <div class="top">
-  <h2>Articulos en inventario</h2>
-  <a class="btn" href="{% url 'inventario:crear' %}">+ Agregar nuevo</a>
+  <h2>Artículos en inventario</h2>
+  {% if not static_export %}
+  <a class="btn" href="{{ pages_prefix }}{% url 'inventario:articulo_crear' %}">+ Agregar nuevo</a>
+  {% endif %}
 </div>
 {% if not articulos %}
-  <p>No hay articulos todavia. Usa "Agregar nuevo" para crear el primero.</p>
-  <p style="color:#555;">Antes de crear un articulo necesitas al menos una
-     <a href="{% url 'inventario:categoria_crear' %}">categoria</a>.</p>
+  <p>No hay artículos todavía. Usa "Agregar nuevo" para crear el primero.</p>
+   {% if not static_export %}
+  <p style="color:#555;">Antes de crear un artículo necesitas al menos una
+     <a href="{{ pages_prefix }}{% url 'inventario:categoria_crear' %}">categoría</a>.</p>
+  <p style="color:#555;">Antes de crear un artículo necesitas al menos una
+     <a href="{{ pages_prefix }}{% url 'inventario:ubicacion_crear' %}">ubicación</a>.</p>
+    {% endif %}
 {% else %}
 <table>
-  <tr><th>Nombre</th><th>Codigo</th><th>Stock</th><th>Ubicacion</th><th>Opciones</th></tr>
+  <tr><th>Nombre</th><th>Código</th><th>Categoría</th><th>Stock</th><th>Ubicación</th><th>Opciones</th></tr>
   {% for a in articulos %}
   <tr>
     <td>{{ a.nombre }}</td>
     <td>{{ a.codigo }}</td>
+    <td>{{ a.categoria }}</td>
     <td>{{ a.stock }}</td>
     <td>{{ a.ubicacion }}</td>
     <td class="actions">
-      <a href="{% url 'inventario:detalle' a.pk %}">Ver</a>
-      <a href="{% url 'inventario:editar' a.pk %}">Editar</a>
-      <a href="{% url 'inventario:eliminar' a.pk %}">Eliminar</a>
+      <a href="{{ pages_prefix }}{% url 'inventario:articulo_detalle' a.pk %}">Ver</a>
+      {% if not static_export %}      
+      <a href="{{ pages_prefix }}{% url 'inventario:articulo_editar' a.pk %}">Editar</a>
+      <a href="{{ pages_prefix }}{% url 'inventario:articulo_eliminar' a.pk %}">Eliminar</a>
+      {% endif %}
     </td>
   </tr>
   {% endfor %}
