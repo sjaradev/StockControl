@@ -91,6 +91,9 @@
         <ion-toolbar color="primary">
           <ion-title>Inicio</ion-title>
           <ion-buttons slot="end">
+            <ion-button id="boton-modo-barra">
+              <ion-icon slot="icon-only" name="phone-portrait-outline"></ion-icon>
+            </ion-button>
             <ion-button data-ir="alertas">
               <ion-icon slot="icon-only" name="notifications-outline"></ion-icon>
             </ion-button>
@@ -112,6 +115,16 @@
             <ion-icon name="sync-outline"></ion-icon>
             Sincronizado con la plataforma web hace 2 minutos
           </p>
+        </div>
+
+        <div class="contenido">
+          <ion-card class="aviso modo" button id="tarjeta-modo">
+            <ion-card-content>
+              <ion-icon name="phone-portrait-outline"></ion-icon>
+              <span>Interfaz <b id="modo-inicio">iOS</b>. Ionic dibuja estas mismas
+                pantallas con el estilo de cada sistema. Toca para cambiar.</span>
+            </ion-card-content>
+          </ion-card>
         </div>
 
         <div class="contenido">

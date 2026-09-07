@@ -1,11 +1,17 @@
 /* ============================================================
    StockControl — service worker
-   Guarda una copia de los archivos de la aplicación para que
-   pueda abrirse aunque el teléfono no tenga conexión, que es
-   una situación habitual dentro de una bodega.
+
+   Guarda una copia de la aplicación para que pueda abrirse sin
+   conexión, que es una situación habitual dentro de una bodega.
+
+   Importante: para los archivos propios se consulta primero la
+   red. Con la estrategia contraria, una vez guardada la copia el
+   navegador nunca volvía a pedir los archivos y los cambios
+   publicados no llegaban al usuario.
    ============================================================ */
 
-const CACHE = "stockcontrol-v1";
+const VERSION = "v3";
+const CACHE = "stockcontrol-" + VERSION;
 
 const ARCHIVOS = [
   "./",
@@ -17,7 +23,7 @@ const ARCHIVOS = [
   "./assets/icon-512.png"
 ];
 
-// Al instalarse, guarda los archivos propios de la aplicación.
+// Al instalarse, guarda una primera copia de los archivos propios.
 self.addEventListener("install", (evento) => {
   evento.waitUntil(
     caches.open(CACHE)
@@ -26,7 +32,7 @@ self.addEventListener("install", (evento) => {
   );
 });
 
-// Al activarse, elimina versiones anteriores de la caché.
+// Al activarse, elimina las versiones anteriores de la caché.
 self.addEventListener("activate", (evento) => {
   evento.waitUntil(
     caches.keys()
@@ -37,24 +43,40 @@ self.addEventListener("activate", (evento) => {
   );
 });
 
-// Responde primero desde la caché y, si no está, va a la red.
+function guardarCopia(peticion, respuesta) {
+  if (respuesta && respuesta.ok) {
+    const copia = respuesta.clone();
+    caches.open(CACHE).then((cache) => cache.put(peticion, copia));
+  }
+  return respuesta;
+}
+
 self.addEventListener("fetch", (evento) => {
   if (evento.request.method !== "GET") return;
 
+  const url = new URL(evento.request.url);
+  const esPropio = url.origin === self.location.origin;
+
+  if (esPropio) {
+    // Archivos de la aplicación: primero la red, para que cada
+    // publicación se vea de inmediato. Si no hay señal, la copia.
+    evento.respondWith(
+      fetch(evento.request)
+        .then((respuesta) => guardarCopia(evento.request, respuesta))
+        .catch(() => caches.match(evento.request)
+          .then((guardado) => guardado || caches.match("./index.html")))
+    );
+    return;
+  }
+
+  // Recursos externos como Ionic: primero la copia, porque su
+  // dirección ya incluye el número de versión y no cambia.
   evento.respondWith(
     caches.match(evento.request).then((guardado) => {
       if (guardado) return guardado;
-
       return fetch(evento.request)
-        .then((respuesta) => {
-          // Guarda también los archivos de Ionic que llegan del CDN.
-          if (respuesta.ok && evento.request.url.startsWith("http")) {
-            const copia = respuesta.clone();
-            caches.open(CACHE).then((cache) => cache.put(evento.request, copia));
-          }
-          return respuesta;
-        })
-        .catch(() => caches.match("./index.html"));
+        .then((respuesta) => guardarCopia(evento.request, respuesta))
+        .catch(() => guardado);
     })
   );
 });

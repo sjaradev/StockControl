@@ -81,21 +81,40 @@ ion-app {
    tratamiento propio de cada plataforma. */
 .pantalla {
   display: none;
+  flex-direction: column;
+}
+
+.pantalla.activa { display: flex; }
+.pantalla ion-content { flex: 1 1 auto; min-height: 0; }
+.oculto { display: none; }
+
+/* La pantalla de acceso ocupa todo el marco, porque no lleva pestañas */
+#pantalla-login {
   position: absolute;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
+}
+
+/* Dentro de la aplicación, las pantallas comparten el alto con la barra
+   inferior: el contenido se estira y la barra conserva su altura. */
+#app-interna {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
   flex-direction: column;
 }
 
-.pantalla.activa { display: flex; }
-.pantalla ion-content { flex: 1 1 auto; }
-.oculto { display: none; }
+#app-interna .pantalla {
+  position: relative;
+  flex: 1 1 auto;
+  min-height: 0;
+}
 
-#app-interna { position: absolute; inset: 0; }
-
-/* La barra de pestañas se reserva su espacio al final de la pantalla */
 #app-interna ion-tab-bar { flex: none; }
 
 /* ---------- Inicio de sesión ---------- */
@@ -538,3 +557,18 @@ ion-tab-button.seleccionada ion-icon { color: var(--marca-700); }
 
 /* ---------- Encabezado de artículos ---------- */
 ion-searchbar { --box-shadow: none; }
+
+/* ---------- Aviso del estilo de interfaz ---------- */
+.aviso.modo {
+  background: var(--marca-50);
+  border: 1px solid var(--marca-100);
+  margin: 0 0 4px;
+}
+
+.aviso.modo ion-card-content {
+  color: var(--marca-800);
+  align-items: center;
+}
+
+.aviso.modo ion-icon { color: var(--marca-700); font-size: 20px; }
+.aviso.modo b { font-weight: 700; }

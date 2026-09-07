@@ -247,15 +247,20 @@
     var texto = modoActual() === "android" ? "Android" : "iOS";
     var enLogin = $("#modo-actual");
     var enPerfil = $("#modo-perfil");
+    var enInicio = $("#modo-inicio");
     if (enLogin) enLogin.textContent = texto;
     if (enPerfil) enPerfil.textContent = texto;
+    if (enInicio) enInicio.textContent = texto;
   }
 
-  function cambiarModo() {
-    var nuevo = modoActual() === "android" ? "ios" : "android";
+  function aplicarModo(nuevo) {
     localStorage.setItem("sc_modo", nuevo);
     // Ionic define el estilo al cargar, por eso se recarga la página.
     location.search = "?modo=" + nuevo;
+  }
+
+  function cambiarModo() {
+    aplicarModo(modoActual() === "android" ? "ios" : "android");
   }
 
   /* ---------------- Instalación como aplicación ---------------- */
@@ -291,6 +296,40 @@
     tipoMovimiento = tipo;
     var segmento = $("#tipo-movimiento");
     if (segmento) segmento.value = tipo;
+  }
+
+  // Ionic dibuja este cuadro con el aspecto de cada sistema: en iOS
+  // aparece centrado y redondeado, y en Android con el estilo Material.
+  async function preguntarAntesDeGuardar() {
+    var alerta = document.createElement("ion-alert");
+    alerta.header = "Confirmar " + NOMBRE_TIPO[tipoMovimiento].toLowerCase();
+    alerta.message = cantidad + " " + articuloElegido.unidad + " de " +
+                     articuloElegido.nombre + ".";
+    alerta.buttons = [
+      { text: "Cancelar", role: "cancel" },
+      { text: "Confirmar", role: "confirm", handler: function () { confirmarMovimiento(); } }
+    ];
+    document.body.appendChild(alerta);
+    await alerta.present();
+  }
+
+  // Hoja de acciones para elegir el estilo de interfaz. En iOS sube desde
+  // abajo con esquinas redondeadas; en Android es una lista Material.
+  async function elegirEstilo() {
+    var hoja = document.createElement("ion-action-sheet");
+    hoja.header = "Estilo de interfaz";
+    hoja.subHeader = "El mismo código, dibujado por Ionic según la plataforma";
+    hoja.buttons = [
+      { text: "iOS", icon: "logo-apple", data: "ios" },
+      { text: "Android", icon: "logo-android", data: "android" },
+      { text: "Cancelar", role: "cancel" }
+    ];
+    document.body.appendChild(hoja);
+    await hoja.present();
+    var elegido = await hoja.onDidDismiss();
+    if (elegido.data && elegido.data !== modoActual()) {
+      aplicarModo(elegido.data);
+    }
   }
 
   function confirmarMovimiento() {
@@ -367,7 +406,9 @@
     $("#boton-entrar").addEventListener("click", validarAcceso);
     $("#cerrar-sesion").addEventListener("click", cerrarSesion);
     $("#chip-modo").addEventListener("click", cambiarModo);
-    $("#item-modo").addEventListener("click", cambiarModo);
+    $("#item-modo").addEventListener("click", elegirEstilo);
+    $("#tarjeta-modo").addEventListener("click", elegirEstilo);
+    $("#boton-modo-barra").addEventListener("click", elegirEstilo);
     $("#item-instalar").addEventListener("click", instalar);
 
     $("#menos").addEventListener("click", function () {
@@ -381,7 +422,7 @@
       tipoMovimiento = e.detail.value;
     });
 
-    $("#confirmar-movimiento").addEventListener("click", confirmarMovimiento);
+    $("#confirmar-movimiento").addEventListener("click", preguntarAntesDeGuardar);
 
     $("#boton-escanear").addEventListener("click", function () {
       var azar = articulos[Math.floor(Math.random() * articulos.length)];
