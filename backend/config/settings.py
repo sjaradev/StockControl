@@ -1,11 +1,16 @@
+"""Configuracion general del proyecto Django para el entorno de desarrollo."""
+
 from pathlib import Path
 
+# Ruta base utilizada para construir las demas rutas del proyecto.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+# Estos valores son apropiados solo para ejecutar el proyecto localmente.
 SECRET_KEY = "clave-solo-para-desarrollo-no-usar-en-produccion"
 DEBUG = True
 ALLOWED_HOSTS = []
 
+# Aplicaciones propias y componentes incluidos por Django.
 INSTALLED_APPS = [
     "django.contrib.admin",
     "django.contrib.auth",
@@ -16,6 +21,7 @@ INSTALLED_APPS = [
     "inventario",
 ]
 
+# Capas que procesan cada solicitud y respuesta en el orden indicado.
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
@@ -46,6 +52,7 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "config.wsgi.application"
 
+# SQLite mantiene la base de desarrollo en el archivo backend/db.sqlite3.
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.sqlite3",
@@ -61,6 +68,7 @@ TIME_ZONE = "America/Santiago"
 USE_I18N = True
 USE_TZ = True
 
+# Configuracion de archivos estaticos y claves primarias automaticas.
 STATIC_URL = "static/"
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
