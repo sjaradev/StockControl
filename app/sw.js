@@ -10,7 +10,7 @@
    publicados no llegaban al usuario.
    ============================================================ */
 
-const VERSION = "v3";
+const VERSION = "v4";
 const CACHE = "stockcontrol-" + VERSION;
 
 const ARCHIVOS = [
@@ -27,7 +27,11 @@ const ARCHIVOS = [
 self.addEventListener("install", (evento) => {
   evento.waitUntil(
     caches.open(CACHE)
-      .then((cache) => cache.addAll(ARCHIVOS))
+      // "reload" obliga a pedir cada archivo al servidor, sin usar la
+      // copia que el navegador pueda tener guardada.
+      .then((cache) => cache.addAll(
+        ARCHIVOS.map((ruta) => new Request(ruta, { cache: "reload" }))
+      ))
       .then(() => self.skipWaiting())
   );
 });
@@ -60,8 +64,10 @@ self.addEventListener("fetch", (evento) => {
   if (esPropio) {
     // Archivos de la aplicación: primero la red, para que cada
     // publicación se vea de inmediato. Si no hay señal, la copia.
+    // "no-cache" obliga a preguntar al servidor si el archivo cambió.
+    const fresca = new Request(evento.request.url, { cache: "no-cache" });
     evento.respondWith(
-      fetch(evento.request)
+      fetch(fresca)
         .then((respuesta) => guardarCopia(evento.request, respuesta))
         .catch(() => caches.match(evento.request)
           .then((guardado) => guardado || caches.match("./index.html")))
