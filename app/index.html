@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="viewport-fit=cover, width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>StockControl — Aplicación móvil</title>
+<meta name="description" content="Aplicación móvil de StockControl construida con Ionic, framework híbrido para iOS y Android. Proyecto APTC106 - Universidad Andrés Bello.">
+
+<meta name="theme-color" content="#0a7d6f">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="assets/icon-192.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+<!-- Ionic: framework híbrido para iOS y Android -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@ionic/core@7.8.6/css/ionic.bundle.css">
+<link rel="stylesheet" href="assets/app.css">
+
+<script>
+  // El modo define si Ionic dibuja la interfaz con el estilo de iOS o el de Android.
+  // Se puede forzar con ?modo=ios o ?modo=android, y queda guardado en el equipo.
+  (function () {
+    var params = new URLSearchParams(location.search);
+    var elegido = params.get('modo') || localStorage.getItem('sc_modo') || 'ios';
+    var modo = (elegido === 'android' || elegido === 'md') ? 'md' : 'ios';
+    localStorage.setItem('sc_modo', modo === 'md' ? 'android' : 'ios');
+    window.Ionic = { config: { mode: modo } };
+    document.documentElement.dataset.modo = modo;
+  })();
+</script>
+</head>
+<body>
+
+<ion-app>
+
+  <!-- ============ Inicio de sesión ============ -->
+  <ion-content id="pantalla-login" class="pantalla activa" fullscreen>
+    <div class="login-fondo">
+      <div class="login-caja">
+
+        <div class="marca">
+          <ion-icon name="cube"></ion-icon>
+        </div>
+        <h1>StockControl</h1>
+        <p class="bajada">Control de inventario en terreno</p>
+
+        <ion-card class="tarjeta-demo">
+          <ion-card-content>
+            <ion-icon name="key-outline"></ion-icon>
+            Cuenta de prueba: <b>demo</b> / <b>demo</b>
+          </ion-card-content>
+        </ion-card>
+
+        <ion-list lines="none" class="lista-login">
+          <ion-item>
+            <ion-icon slot="start" name="person-outline"></ion-icon>
+            <ion-input id="usuario" label="Usuario" label-placement="floating"
+                       value="demo" autocomplete="off"></ion-input>
+          </ion-item>
+          <ion-item>
+            <ion-icon slot="start" name="lock-closed-outline"></ion-icon>
+            <ion-input id="clave" label="Contraseña" label-placement="floating"
+                       type="password" value="demo" autocomplete="off"></ion-input>
+          </ion-item>
+        </ion-list>
+
+        <ion-text color="danger" id="error-login" class="error-login"></ion-text>
+
+        <ion-button expand="block" id="boton-entrar" class="boton-entrar">
+          Entrar
+          <ion-icon slot="end" name="arrow-forward"></ion-icon>
+        </ion-button>
+
+        <div class="pie-login">
+          <ion-chip outline id="chip-modo">
+            <ion-icon name="phone-portrait-outline"></ion-icon>
+            <ion-label>Interfaz: <b id="modo-actual">iOS</b> · tocar para cambiar</ion-label>
+          </ion-chip>
+          <p>APTC106 — Taller de Desarrollo Web y Móvil</p>
+        </div>
+
+      </div>
+    </div>
+  </ion-content>
+
+  <!-- ============ Aplicación ============ -->
+  <div id="app-interna" class="oculto">
+
+    <!-- ---------- Inicio ---------- -->
+    <ion-content id="pantalla-inicio" class="pantalla" fullscreen>
+      <ion-header collapse="condense">
+        <ion-toolbar>
+          <ion-title size="large">Inicio</ion-title>
+        </ion-toolbar>
+      </ion-header>
+
+      <div class="cabecera-inicio">
+        <div class="fila-saludo">
+          <ion-avatar class="avatar-usuario"><span>RR</span></ion-avatar>
+          <div class="quien">
+            <small>Buenos días,</small>
+            <strong>Rodrigo Rivas</strong>
+          </div>
+          <ion-button fill="clear" class="boton-campana" data-ir="alertas">
+            <ion-icon slot="icon-only" name="notifications-outline"></ion-icon>
+            <ion-badge color="danger" class="punto-aviso">3</ion-badge>
+          </ion-button>
+        </div>
+        <h2>Bodega Central</h2>
+        <p class="sincronizado">
+          <ion-icon name="sync-outline"></ion-icon>
+          Sincronizado con la plataforma web hace 2 minutos
+        </p>
+      </div>
+
+      <div class="contenido">
+        <ion-grid class="rejilla-indicadores">
+          <ion-row>
+            <ion-col size="6">
+              <ion-card class="indicador">
+                <ion-card-content>
+                  <div class="icono verde"><ion-icon name="cube-outline"></ion-icon></div>
+                  <div class="numero">1.284</div>
+                  <div class="etiqueta">Artículos activos</div>
+                </ion-card-content>
+              </ion-card>
+            </ion-col>
+            <ion-col size="6">
+              <ion-card class="indicador">
+                <ion-card-content>
+                  <div class="icono ambar"><ion-icon name="alert-circle-outline"></ion-icon></div>
+                  <div class="numero">18</div>
+                  <div class="etiqueta">Bajo el mínimo</div>
+                </ion-card-content>
+              </ion-card>
+            </ion-col>
+            <ion-col size="6">
+              <ion-card class="indicador">
+                <ion-card-content>
+                  <div class="icono azul"><ion-icon name="swap-horizontal-outline"></ion-icon></div>
+                  <div class="numero">46</div>
+                  <div class="etiqueta">Movimientos hoy</div>
+                </ion-card-content>
+              </ion-card>
+            </ion-col>
+            <ion-col size="6">
+              <ion-card class="indicador">
+                <ion-card-content>
+                  <div class="icono rojo"><ion-icon name="close-circle-outline"></ion-icon></div>
+                  <div class="numero">3</div>
+                  <div class="etiqueta">Sin stock</div>
+                </ion-card-content>
+              </ion-card>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+
+        <h3 class="titulo-seccion">Acciones rápidas</h3>
+        <ion-grid class="rejilla-acciones">
+          <ion-row>
+            <ion-col size="4">
+              <ion-button expand="block" fill="outline" class="accion" data-ir="escaner">
+                <div><ion-icon name="scan-outline"></ion-icon><span>Escanear</span></div>
+              </ion-button>
+            </ion-col>
+            <ion-col size="4">
+              <ion-button expand="block" fill="outline" class="accion" data-ir="movimiento" data-tipo="entrada">
+                <div><ion-icon name="arrow-down-outline"></ion-icon><span>Recepción</span></div>
+              </ion-button>
+            </ion-col>
+            <ion-col size="4">
+              <ion-button expand="block" fill="outline" class="accion" data-ir="articulos">
+                <div><ion-icon name="search-outline"></ion-icon><span>Buscar</span></div>
+              </ion-button>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+
+        <div class="fila-titulo">
+          <h3 class="titulo-seccion">Movimientos recientes</h3>
+          <ion-button fill="clear" size="small" data-ir="historial">Ver todo</ion-button>
+        </div>
+
+        <ion-list inset class="lista-movimientos">
+          <ion-item>
+            <ion-icon slot="start" name="arrow-down-circle" color="success"></ion-icon>
+            <ion-label>
+              <h4>Guantes de nitrilo talla M</h4>
+              <p>Recepción · hace 12 min · F. Flores</p>
+            </ion-label>
+            <ion-note slot="end" color="success">+120</ion-note>
+          </ion-item>
+          <ion-item>
+            <ion-icon slot="start" name="arrow-up-circle" color="danger"></ion-icon>
+            <ion-label>
+              <h4>Taladro percutor 750W</h4>
+              <p>Despacho · hace 38 min · S. Jara</p>
+            </ion-label>
+            <ion-note slot="end" color="danger">-2</ion-note>
+          </ion-item>
+          <ion-item>
+            <ion-icon slot="start" name="swap-horizontal" color="primary"></ion-icon>
+            <ion-label>
+              <h4>Casco de seguridad blanco</h4>
+              <p>Traslado a Bodega B · hace 1 hora</p>
+            </ion-label>
+            <ion-note slot="end" color="primary">15</ion-note>
+          </ion-item>
+        </ion-list>
+      </div>
+    </ion-content>
+
+    <!-- ---------- Artículos ---------- -->
+    <ion-content id="pantalla-articulos" class="pantalla" fullscreen>
+      <div class="barra-titulo">
+        <h2>Artículos</h2>
+      </div>
+      <div class="contenido">
+        <ion-searchbar placeholder="Buscar por nombre o código" id="buscador"></ion-searchbar>
+
+        <div class="fila-filtros">
+          <ion-chip class="filtro activo">Todos</ion-chip>
+          <ion-chip class="filtro" outline>Herramientas</ion-chip>
+          <ion-chip class="filtro" outline>Insumos</ion-chip>
+          <ion-chip class="filtro" outline>Seguridad</ion-chip>
+        </div>
+
+        <ion-list id="lista-articulos" inset></ion-list>
+      </div>
+    </ion-content>
+
+    <!-- ---------- Detalle ---------- -->
+    <ion-content id="pantalla-detalle" class="pantalla" fullscreen>
+      <div class="barra-titulo con-volver">
+        <ion-button fill="clear" data-ir="articulos">
+          <ion-icon slot="icon-only" name="arrow-back"></ion-icon>
+        </ion-button>
+        <h2>Detalle</h2>
+      </div>
+      <div class="contenido">
+        <ion-card class="tarjeta-detalle">
+          <ion-card-header>
+            <div class="icono-grande"><ion-icon name="build-outline"></ion-icon></div>
+            <ion-card-title id="detalle-nombre">Taladro percutor 750W</ion-card-title>
+            <ion-card-subtitle id="detalle-codigo">7801234567890</ion-card-subtitle>
+          </ion-card-header>
+          <ion-card-content>
+            <ion-grid class="rejilla-cifras">
+              <ion-row>
+                <ion-col><div class="cifra" id="detalle-stock">12</div><div class="pie">Disponible</div></ion-col>
+                <ion-col><div class="cifra">5</div><div class="pie">Mínimo</div></ion-col>
+                <ion-col><div class="cifra">3</div><div class="pie">Reservado</div></ion-col>
+              </ion-row>
+            </ion-grid>
+          </ion-card-content>
+        </ion-card>
+
+        <ion-list inset>
+          <ion-item><ion-label>Categoría</ion-label><ion-note slot="end" id="detalle-categoria">Herramientas</ion-note></ion-item>
+          <ion-item><ion-label>Ubicación</ion-label><ion-note slot="end" id="detalle-ubicacion">Bodega A · Estante 3</ion-note></ion-item>
+          <ion-item><ion-label>Proveedor</ion-label><ion-note slot="end">Ferretería Sur</ion-note></ion-item>
+          <ion-item><ion-label>Último movimiento</ion-label><ion-note slot="end">Hoy, 09:22</ion-note></ion-item>
+        </ion-list>
+
+        <ion-grid class="rejilla-botones">
+          <ion-row>
+            <ion-col size="6">
+              <ion-button expand="block" data-ir="movimiento" data-tipo="entrada">
+                <ion-icon slot="start" name="add"></ion-icon> Ingresar
+              </ion-button>
+            </ion-col>
+            <ion-col size="6">
+              <ion-button expand="block" fill="outline" data-ir="movimiento" data-tipo="salida">
+                <ion-icon slot="start" name="remove"></ion-icon> Retirar
+              </ion-button>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+
+        <h3 class="titulo-seccion">Historial del artículo</h3>
+        <ion-list inset>
+          <ion-item>
+            <ion-icon slot="start" name="arrow-up-circle" color="danger"></ion-icon>
+            <ion-label><h4>Despacho a Obra Norte</h4><p>Hoy 09:22 · S. Jara</p></ion-label>
+            <ion-note slot="end" color="danger">-2</ion-note>
+          </ion-item>
+          <ion-item>
+            <ion-icon slot="start" name="arrow-down-circle" color="success"></ion-icon>
+            <ion-label><h4>Recepción de proveedor</h4><p>Ayer 16:40 · R. Rivas</p></ion-label>
+            <ion-note slot="end" color="success">+10</ion-note>
+          </ion-item>
+        </ion-list>
+      </div>
+    </ion-content>
+
+    <!-- ---------- Escáner ---------- -->
+    <ion-content id="pantalla-escaner" class="pantalla escaner" fullscreen>
+      <div class="camara">
+        <div class="marco">
+          <span></span><span></span><span></span><span></span>
+          <div class="rayo"></div>
+          <div class="codigo-barras" id="codigo-barras"></div>
+        </div>
+        <div class="mensaje-escaner">
+          <h3>Apunta al código del artículo</h3>
+          <p>Compatible con código de barras y QR. En el dispositivo real, Capacitor entrega el acceso a la cámara.</p>
+        </div>
+      </div>
+      <div class="herramientas-escaner">
+        <ion-button expand="block" id="boton-escanear">
+          <ion-icon slot="start" name="scan-outline"></ion-icon>
+          Simular escaneo
+        </ion-button>
+        <ion-button expand="block" fill="clear" color="medium" data-ir="articulos">
+          ¿El código no se lee? Buscar manualmente
+        </ion-button>
+      </div>
+    </ion-content>
+
+    <!-- ---------- Movimiento ---------- -->
+    <ion-content id="pantalla-movimiento" class="pantalla" fullscreen>
+      <div class="barra-titulo con-volver">
+        <ion-button fill="clear" data-ir="inicio">
+          <ion-icon slot="icon-only" name="arrow-back"></ion-icon>
+        </ion-button>
+        <h2>Registrar movimiento</h2>
+      </div>
+      <div class="contenido">
+        <ion-segment value="entrada" id="tipo-movimiento">
+          <ion-segment-button value="entrada"><ion-label>Entrada</ion-label></ion-segment-button>
+          <ion-segment-button value="salida"><ion-label>Salida</ion-label></ion-segment-button>
+          <ion-segment-button value="traslado"><ion-label>Traslado</ion-label></ion-segment-button>
+        </ion-segment>
+
+        <ion-list inset>
+          <ion-item>
+            <ion-icon slot="start" name="cube-outline"></ion-icon>
+            <ion-label>
+              <p>Artículo</p>
+              <h4 id="mov-articulo">Taladro percutor 750W</h4>
+            </ion-label>
+          </ion-item>
+          <ion-item>
+            <ion-select label="Bodega de destino" id="mov-bodega" value="a" interface="action-sheet">
+              <ion-select-option value="a">Bodega A · Estante 3</ion-select-option>
+              <ion-select-option value="b">Bodega B · Estante 1</ion-select-option>
+              <ion-select-option value="c">Bodega C · Estante 2</ion-select-option>
+            </ion-select>
+          </ion-item>
+          <ion-item>
+            <ion-input label="Motivo u observación" label-placement="floating"
+                       id="mov-motivo" placeholder="Orden de compra 4471"></ion-input>
+          </ion-item>
+        </ion-list>
+
+        <div class="contador">
+          <ion-button fill="outline" id="menos"><ion-icon slot="icon-only" name="remove"></ion-icon></ion-button>
+          <div class="cantidad" id="cantidad">10</div>
+          <ion-button fill="outline" id="mas"><ion-icon slot="icon-only" name="add"></ion-icon></ion-button>
+        </div>
+        <p class="ayuda-contador">Cantidad a registrar</p>
+
+        <ion-card class="aviso">
+          <ion-card-content>
+            <ion-icon name="information-circle-outline"></ion-icon>
+            Cada movimiento se guarda con tu usuario, la fecha y la ubicación, para mantener la trazabilidad.
+          </ion-card-content>
+        </ion-card>
+
+        <ion-button expand="block" id="confirmar-movimiento">
+          <ion-icon slot="start" name="checkmark"></ion-icon>
+          Confirmar movimiento
+        </ion-button>
+      </div>
+    </ion-content>
+
+    <!-- ---------- Confirmación ---------- -->
+    <ion-content id="pantalla-listo" class="pantalla" fullscreen>
+      <div class="contenido centrado">
+        <div class="circulo-exito"><ion-icon name="checkmark"></ion-icon></div>
+        <h2>Movimiento registrado</h2>
+        <p class="bajada-exito">El stock se actualizó correctamente.</p>
+
+        <ion-card class="aviso sincronizacion">
+          <ion-card-content>
+            <ion-icon name="cloud-done-outline"></ion-icon>
+            Enviado a la API y <b>ya visible en la plataforma web</b>, marcado con origen Móvil.
+          </ion-card-content>
+        </ion-card>
+
+        <ion-list inset class="comprobante">
+          <ion-item><ion-label>Artículo</ion-label><ion-note slot="end">Taladro percutor</ion-note></ion-item>
+          <ion-item><ion-label>Tipo</ion-label><ion-note slot="end" id="listo-tipo">Entrada</ion-note></ion-item>
+          <ion-item><ion-label>Cantidad</ion-label><ion-note slot="end" id="listo-cantidad">10 unidades</ion-note></ion-item>
+          <ion-item><ion-label>Nuevo stock</ion-label><ion-note slot="end" color="success" id="listo-stock">22 unidades</ion-note></ion-item>
+          <ion-item><ion-label>Registrado por</ion-label><ion-note slot="end">R. Rivas</ion-note></ion-item>
+        </ion-list>
+
+        <ion-button expand="block" data-ir="inicio">Volver al inicio</ion-button>
+        <ion-button expand="block" fill="clear" data-ir="escaner">Escanear otro artículo</ion-button>
+      </div>
+    </ion-content>
+
+    <!-- ---------- Historial ---------- -->
+    <ion-content id="pantalla-historial" class="pantalla" fullscreen>
+      <div class="barra-titulo"><h2>Movimientos</h2></div>
+      <div class="contenido">
+        <ion-segment value="hoy" class="segmento-historial">
+          <ion-segment-button value="hoy"><ion-label>Hoy</ion-label></ion-segment-button>
+          <ion-segment-button value="semana"><ion-label>Semana</ion-label></ion-segment-button>
+          <ion-segment-button value="mes"><ion-label>Mes</ion-label></ion-segment-button>
+        </ion-segment>
+        <ion-list id="lista-historial" inset></ion-list>
+      </div>
+    </ion-content>
+
+    <!-- ---------- Alertas ---------- -->
+    <ion-content id="pantalla-alertas" class="pantalla" fullscreen>
+      <div class="barra-titulo con-volver">
+        <ion-button fill="clear" data-ir="inicio">
+          <ion-icon slot="icon-only" name="arrow-back"></ion-icon>
+        </ion-button>
+        <h2>Alertas</h2>
+      </div>
+      <div class="contenido">
+        <ion-card color="warning" class="aviso-alerta">
+          <ion-card-content>
+            <ion-icon name="warning-outline"></ion-icon>
+            Hay 18 artículos bajo el stock mínimo y 3 sin unidades. Revísalos antes de comprometer pedidos.
+          </ion-card-content>
+        </ion-card>
+        <ion-list id="lista-alertas" inset></ion-list>
+      </div>
+    </ion-content>
+
+    <!-- ---------- Perfil ---------- -->
+    <ion-content id="pantalla-perfil" class="pantalla" fullscreen>
+      <div class="cabecera-perfil">
+        <ion-avatar class="avatar-grande"><span>RR</span></ion-avatar>
+        <h2>Rodrigo Rivas Riffo</h2>
+        <p>Operario de bodega · Bodega Central</p>
+      </div>
+      <div class="contenido">
+        <ion-grid class="rejilla-cifras tarjeta-cifras">
+          <ion-row>
+            <ion-col><div class="cifra">46</div><div class="pie">Hoy</div></ion-col>
+            <ion-col><div class="cifra">312</div><div class="pie">Este mes</div></ion-col>
+            <ion-col><div class="cifra">99%</div><div class="pie">Sin errores</div></ion-col>
+          </ion-row>
+        </ion-grid>
+
+        <h3 class="titulo-seccion">Aplicación</h3>
+        <ion-list inset>
+          <ion-item button id="item-modo">
+            <ion-icon slot="start" name="phone-portrait-outline"></ion-icon>
+            <ion-label>Estilo de interfaz</ion-label>
+            <ion-note slot="end" id="modo-perfil">iOS</ion-note>
+          </ion-item>
+          <ion-item button id="item-instalar">
+            <ion-icon slot="start" name="download-outline"></ion-icon>
+            <ion-label>Instalar en el dispositivo</ion-label>
+            <ion-note slot="end" id="estado-instalacion">Disponible</ion-note>
+          </ion-item>
+          <ion-item>
+            <ion-icon slot="start" name="cloud-done-outline"></ion-icon>
+            <ion-label>Sincronización</ion-label>
+            <ion-note slot="end" color="success">Al día</ion-note>
+          </ion-item>
+          <ion-item>
+            <ion-icon slot="start" name="information-circle-outline"></ion-icon>
+            <ion-label>Versión</ion-label>
+            <ion-note slot="end">1.1 · Ionic</ion-note>
+          </ion-item>
+        </ion-list>
+
+        <h3 class="titulo-seccion">Sesión</h3>
+        <ion-list inset>
+          <ion-item button id="cerrar-sesion">
+            <ion-icon slot="start" name="log-out-outline" color="danger"></ion-icon>
+            <ion-label color="danger">Cerrar sesión</ion-label>
+          </ion-item>
+        </ion-list>
+
+        <div class="enlaces-pie">
+          <ion-button fill="clear" size="small" href="../index.html">Volver al inicio del proyecto</ion-button>
+          <ion-button fill="clear" size="small" href="../web.html">Ver la plataforma web</ion-button>
+        </div>
+      </div>
+    </ion-content>
+
+    <!-- ---------- Barra de pestañas ---------- -->
+    <ion-tab-bar id="barra-pestanas">
+      <ion-tab-button data-ir="inicio" class="seleccionada">
+        <ion-icon name="home-outline"></ion-icon>
+        <ion-label>Inicio</ion-label>
+      </ion-tab-button>
+      <ion-tab-button data-ir="articulos">
+        <ion-icon name="cube-outline"></ion-icon>
+        <ion-label>Artículos</ion-label>
+      </ion-tab-button>
+      <ion-tab-button data-ir="escaner" class="pestana-escaner">
+        <ion-icon name="scan-outline"></ion-icon>
+        <ion-label>Escanear</ion-label>
+      </ion-tab-button>
+      <ion-tab-button data-ir="historial">
+        <ion-icon name="time-outline"></ion-icon>
+        <ion-label>Movimientos</ion-label>
+      </ion-tab-button>
+      <ion-tab-button data-ir="perfil">
+        <ion-icon name="person-outline"></ion-icon>
+        <ion-label>Perfil</ion-label>
+      </ion-tab-button>
+    </ion-tab-bar>
+
+  </div>
+</ion-app>
+
+<script type="module" src="https://cdn.jsdelivr.net/npm/@ionic/core@7.8.6/dist/ionic/ionic.esm.js"></script>
+<script nomodule src="https://cdn.jsdelivr.net/npm/@ionic/core@7.8.6/dist/ionic/ionic.js"></script>
+<script src="assets/app.js"></script>
+</body>
+</html>

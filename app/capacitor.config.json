@@ -1,0 +1,15 @@
+{
+  "appId": "cl.unab.aptc106.stockcontrol",
+  "appName": "StockControl",
+  "webDir": ".",
+  "bundledWebRuntime": false,
+  "server": {
+    "androidScheme": "https"
+  },
+  "plugins": {
+    "SplashScreen": {
+      "launchShowDuration": 1500,
+      "backgroundColor": "#075e54"
+    }
+  }
+}

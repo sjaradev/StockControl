@@ -1105,3 +1105,93 @@ body {
   .intro { padding: 0 20px; }
   .intro h1 { font-size: 27px; }
 }
+
+/* ============================================================
+   Añadidos: enlaces entre mockups, cuenta de prueba y
+   señales de sincronizacion con la plataforma web
+   ============================================================ */
+
+.intro .back {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: #a9c4c9;
+  text-decoration: none;
+  font-size: 13.5px;
+  border: 1px solid rgba(255, 255, 255, .16);
+  background: rgba(255, 255, 255, .06);
+  padding: 8px 14px;
+  border-radius: 10px;
+  margin-bottom: 20px;
+  transition: background .18s, color .18s;
+}
+
+.intro .back:hover { background: rgba(255, 255, 255, .13); color: #fff; }
+.intro .back svg { width: 14px; height: 14px; }
+
+.intro .switch {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  margin-top: 22px;
+  background: rgba(125, 211, 252, .14);
+  border: 1px solid rgba(125, 211, 252, .32);
+  color: #7dd3fc;
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 600;
+  padding: 11px 17px;
+  border-radius: 11px;
+  transition: background .18s;
+}
+
+.intro .switch:hover { background: rgba(125, 211, 252, .22); }
+.intro .switch svg { width: 16px; height: 16px; }
+
+/* Cuenta de prueba en el login */
+.demo-chip {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  background: rgba(45, 212, 191, .1);
+  border: 1px dashed rgba(45, 212, 191, .38);
+  border-radius: 12px;
+  padding: 11px 13px;
+  font-size: 12.5px;
+  color: #8fb9b6;
+  margin-bottom: 20px;
+}
+
+.demo-chip svg { width: 15px; height: 15px; color: var(--brand-400); flex: none; }
+.demo-chip b { color: #fff; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; }
+
+/* Mensaje de error del login */
+.login-error {
+  display: none;
+  font-size: 12.5px;
+  color: #fca5a5;
+  font-weight: 600;
+  margin-bottom: 10px;
+  padding-left: 2px;
+}
+
+.login-error.show { display: block; }
+
+/* Confirmacion: aviso de sincronizacion con la web */
+.synced {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  text-align: left;
+  background: var(--brand-50);
+  border: 1px solid var(--brand-100);
+  border-radius: 13px;
+  padding: 13px 15px;
+  font-size: 12.5px;
+  color: var(--brand-800);
+  line-height: 1.55;
+  margin-bottom: 20px;
+}
+
+.synced svg { width: 16px; height: 16px; color: var(--brand-600); flex: none; margin-top: 1px; }
+.synced b { font-weight: 700; }
