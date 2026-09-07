@@ -47,26 +47,50 @@ body {
   min-height: 100vh;
 }
 
+/* Ionic posiciona ion-app de forma absoluta para ocupar toda la ventana.
+   Como aquí lo mostramos dentro de un marco de teléfono, hay que devolverlo
+   al flujo normal para que el centrado del body funcione. */
 ion-app {
-  position: relative;
+  position: relative !important;
+  inset: auto !important;
+  margin: auto;
   width: 390px;
   height: 800px;
-  max-height: 96vh;
+  max-height: 94vh;
   border-radius: 44px;
   overflow: hidden;
   box-shadow: 0 26px 60px rgba(0, 0, 0, .45), 0 0 0 12px #0a0f16;
-  contain: layout size style;
 }
 
 @media (max-width: 460px) {
   body { display: block; background: var(--ion-background-color); }
-  ion-app { width: 100%; height: 100vh; max-height: none; border-radius: 0; box-shadow: none; }
+  ion-app {
+    width: 100%;
+    height: 100vh;
+    height: 100dvh;
+    max-height: none;
+    border-radius: 0;
+    box-shadow: none;
+    margin: 0;
+  }
 }
 
 /* ---------- Cambio entre pantallas ---------- */
-.pantalla { display: none; }
+/* Cada pantalla es un ion-content. Fuera de un ion-router-outlet no recibe
+   altura propia, así que se estira sobre el marco del teléfono. */
+.pantalla {
+  display: none;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+
 .pantalla.activa { display: block; }
 .oculto { display: none; }
+
+#app-interna { position: absolute; inset: 0; }
 
 /* ---------- Inicio de sesión ---------- */
 .login-fondo {
