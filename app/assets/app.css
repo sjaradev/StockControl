@@ -1,0 +1,583 @@
+/* ============================================================
+   StockControl — aplicación móvil
+   Estilos propios que acompañan a los componentes de Ionic.
+   Solo se ajusta lo necesario: el resto lo resuelve el framework,
+   que adapta la interfaz al estilo de iOS o de Android.
+   ============================================================ */
+
+:root {
+  /* Paleta de la marca, aplicada sobre las variables de Ionic */
+  --ion-color-primary: #0a7d6f;
+  --ion-color-primary-rgb: 10, 125, 111;
+  --ion-color-primary-contrast: #ffffff;
+  --ion-color-primary-contrast-rgb: 255, 255, 255;
+  --ion-color-primary-shade: #096e62;
+  --ion-color-primary-tint: #238a7d;
+
+  --ion-color-success: #16a34a;
+  --ion-color-success-rgb: 22, 163, 74;
+  --ion-color-warning: #d97706;
+  --ion-color-warning-rgb: 217, 119, 6;
+  --ion-color-danger: #dc2626;
+  --ion-color-danger-rgb: 220, 38, 38;
+
+  --ion-background-color: #f6f8fb;
+  --ion-background-color-rgb: 246, 248, 251;
+
+  --marca-900: #04302b;
+  --marca-800: #075e54;
+  --marca-700: #0a7d6f;
+  --marca-500: #14b8a6;
+  --marca-400: #2dd4bf;
+  --marca-100: #ccfbf1;
+  --marca-50: #f0fdfa;
+}
+
+/* El prototipo se muestra dentro de un marco de teléfono cuando
+   se abre desde un computador, y a pantalla completa en el móvil. */
+body {
+  margin: 0;
+  background:
+    radial-gradient(900px 520px at 15% -10%, #0d5f56 0%, transparent 55%),
+    linear-gradient(160deg, #071b28 0%, #06222b 45%, #04171f 100%);
+  background-attachment: fixed;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+}
+
+/* Ionic posiciona ion-app de forma absoluta para ocupar toda la ventana.
+   Como aquí lo mostramos dentro de un marco de teléfono, hay que devolverlo
+   al flujo normal para que el centrado del body funcione. */
+ion-app {
+  position: relative !important;
+  inset: auto !important;
+  margin: auto;
+  width: 390px;
+  height: 800px;
+  max-height: 94vh;
+  border-radius: 44px;
+  overflow: hidden;
+  box-shadow: 0 26px 60px rgba(0, 0, 0, .45), 0 0 0 12px #0a0f16;
+}
+
+@media (max-width: 460px) {
+  body { display: block; background: var(--ion-background-color); }
+  ion-app {
+    width: 100%;
+    height: 100vh;
+    height: 100dvh;
+    max-height: none;
+    border-radius: 0;
+    box-shadow: none;
+    margin: 0;
+  }
+}
+
+/* ---------- Cambio entre pantallas ---------- */
+/* Cada pantalla replica la estructura de una página de Ionic: una cabecera
+   fija arriba y el contenido debajo. Así ion-header y ion-toolbar reciben el
+   tratamiento propio de cada plataforma. */
+.pantalla {
+  display: none;
+  flex-direction: column;
+}
+
+#pantalla-login {
+  position: absolute;
+  inset: 0;
+}
+
+#pantalla-login.activa {
+  display: flex;
+}
+
+#app-interna {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+
+#app-interna.oculto {
+  display: none !important;
+}
+
+#app-interna .pantalla {
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  bottom: 56px !important;
+  display: none;
+  flex-direction: column;
+}
+
+#app-interna .pantalla.activa {
+  display: flex !important;
+}
+
+#app-interna #pantalla-movimiento,
+#app-interna #pantalla-listo {
+  bottom: 0 !important;
+}
+
+.pantalla ion-content {
+  flex: 1 1 auto;
+  min-height: 0;
+}
+
+.oculto { display: none; }
+
+/* La barra de pestañas queda fija en la parte inferior tanto en iOS como en Android */
+#app-interna ion-tab-bar,
+#barra-pestanas {
+  position: absolute !important;
+  bottom: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  width: 100% !important;
+  z-index: 1000 !important;
+  box-shadow: 0 -2px 10px rgba(0, 0, 0, .08);
+}
+
+/* ---------- Inicio de sesión ---------- */
+.login-fondo {
+  min-height: 100%;
+  background: linear-gradient(165deg, var(--marca-800) 0%, var(--marca-900) 60%, #041f26 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 26px 24px;
+}
+
+.login-caja { width: 100%; text-align: center; color: #fff; }
+
+.marca {
+  width: 78px; height: 78px;
+  margin: 0 auto 20px;
+  border-radius: 24px;
+  background: linear-gradient(145deg, var(--marca-400), #0f9b8a);
+  display: grid; place-items: center;
+  box-shadow: 0 16px 34px rgba(20, 184, 166, .34);
+}
+
+.marca ion-icon { font-size: 38px; color: var(--marca-900); }
+
+.login-caja h1 { font-size: 30px; margin: 0 0 6px; letter-spacing: -.02em; }
+.bajada { color: #8fb9b6; font-size: 14px; margin: 0 0 24px; }
+
+.tarjeta-demo {
+  margin: 0 0 18px;
+  background: rgba(45, 212, 191, .12);
+  border: 1px dashed rgba(45, 212, 191, .4);
+  box-shadow: none;
+}
+
+.tarjeta-demo ion-card-content {
+  color: #a9d6d0;
+  font-size: 13px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px;
+}
+
+.tarjeta-demo b { color: #fff; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; }
+.tarjeta-demo ion-icon { color: var(--marca-400); font-size: 16px; }
+
+.lista-login { background: transparent; margin-bottom: 6px; }
+
+.lista-login ion-item {
+  --background: rgba(255, 255, 255, .07);
+  --border-radius: 14px;
+  --color: #ffffff;
+  --highlight-color-focused: var(--marca-400);
+  --padding-start: 14px;
+  margin-bottom: 12px;
+  border: 1px solid rgba(255, 255, 255, .14);
+  border-radius: 14px;
+}
+
+.lista-login ion-icon { color: #6f9d99; font-size: 18px; }
+.lista-login ion-input { --color: #ffffff; --placeholder-color: #5f8b88; }
+
+.error-login {
+  display: none;
+  font-size: 13px;
+  margin-bottom: 10px;
+  font-weight: 600;
+}
+
+.error-login.visible { display: block; }
+
+.boton-entrar {
+  --background: linear-gradient(100deg, var(--marca-500), var(--marca-400));
+  --color: #04302b;
+  --border-radius: 14px;
+  --box-shadow: 0 10px 24px rgba(20, 184, 166, .3);
+  font-weight: 700;
+  margin-top: 6px;
+}
+
+.pie-login { margin-top: 26px; }
+.pie-login p { color: #5f8b88; font-size: 11.5px; margin: 14px 0 0; }
+
+#chip-modo {
+  --background: rgba(255, 255, 255, .08);
+  --color: #a9d6d0;
+  font-size: 12px;
+}
+
+#chip-modo ion-icon { color: var(--marca-400); }
+
+/* ---------- Cabecera del inicio ---------- */
+.cabecera-inicio {
+  background: linear-gradient(155deg, var(--marca-800), var(--marca-700) 60%, #0f9b8a);
+  color: #fff;
+  padding: 22px 20px 26px;
+  border-radius: 0 0 28px 28px;
+}
+
+.fila-saludo { display: flex; align-items: center; gap: 12px; }
+
+.avatar-usuario {
+  width: 44px; height: 44px;
+  background: rgba(255, 255, 255, .18);
+  border: 1px solid rgba(255, 255, 255, .24);
+  display: grid; place-items: center;
+}
+
+.avatar-usuario span { font-weight: 700; font-size: 15px; color: #fff; }
+
+.quien { margin-right: auto; }
+.quien small { display: block; font-size: 12.5px; color: #a9d6d0; }
+.quien strong { font-size: 17px; letter-spacing: -.01em; }
+
+
+.cabecera-inicio h2 { font-size: 24px; margin: 20px 0 6px; letter-spacing: -.02em; }
+
+.sincronizado {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 12.5px;
+  color: #a9d6d0;
+  margin: 0;
+}
+
+.sincronizado ion-icon { font-size: 15px; }
+
+/* ---------- Contenido general ---------- */
+.contenido { padding: 14px 14px 24px; }
+.contenido.centrado { text-align: center; padding-top: 60px; }
+
+
+.titulo-seccion {
+  font-size: 16px;
+  margin: 20px 6px 10px;
+  letter-spacing: -.01em;
+}
+
+.fila-titulo { display: flex; align-items: center; }
+.fila-titulo .titulo-seccion { margin-right: auto; }
+
+/* ---------- Indicadores ---------- */
+.rejilla-indicadores { padding: 0; --ion-grid-column-padding: 5px; }
+
+.indicador { margin: 0; border-radius: 16px; }
+.indicador ion-card-content { padding: 14px; }
+
+.indicador .icono {
+  width: 34px; height: 34px;
+  border-radius: 11px;
+  display: grid; place-items: center;
+  margin-bottom: 9px;
+}
+
+.indicador .icono ion-icon { font-size: 18px; }
+.icono.verde { background: var(--marca-100); color: var(--marca-700); }
+.icono.ambar { background: #fef3c7; color: #d97706; }
+.icono.azul { background: #dbeafe; color: #2563eb; }
+.icono.rojo { background: #fee2e2; color: #dc2626; }
+
+.indicador .numero {
+  font-size: 25px;
+  font-weight: 700;
+  letter-spacing: -.03em;
+  color: #0b1220;
+  line-height: 1;
+}
+
+.indicador .etiqueta { font-size: 11.5px; color: #5b6b7f; margin-top: 5px; }
+
+/* ---------- Acciones rápidas ---------- */
+.rejilla-acciones { padding: 0; --ion-grid-column-padding: 4px; }
+
+.accion {
+  --border-radius: 16px;
+  --border-color: #dbe3ec;
+  --color: #263445;
+  height: 84px;
+  margin: 0;
+  font-size: 12px;
+}
+
+.accion div { display: flex; flex-direction: column; align-items: center; gap: 7px; }
+.accion ion-icon { font-size: 22px; color: var(--marca-700); }
+
+/* ---------- Listas ---------- */
+.lista-movimientos ion-label h4,
+ion-list ion-label h4 {
+  font-size: 14px;
+  font-weight: 600;
+  margin: 0 0 3px;
+}
+
+ion-list ion-label p { font-size: 12px; color: #5b6b7f; margin: 0; }
+ion-note[slot="end"] { font-size: 14.5px; font-weight: 700; }
+
+.fila-filtros { display: flex; gap: 7px; overflow-x: auto; padding: 4px 6px 10px; }
+.fila-filtros::-webkit-scrollbar { display: none; }
+.filtro { flex: none; font-size: 12.5px; }
+.filtro.activo { --background: var(--marca-700); --color: #ffffff; }
+
+/* Etiqueta de estado del stock */
+.estado {
+  font-size: 10.5px;
+  font-weight: 700;
+  padding: 3px 9px;
+  border-radius: 999px;
+  margin-top: 4px;
+  display: inline-block;
+}
+
+.estado.ok { background: #dcfce7; color: #16a34a; }
+.estado.bajo { background: #fef3c7; color: #d97706; }
+.estado.sin { background: #fee2e2; color: #dc2626; }
+
+.cuadro-inicial {
+  width: 42px; height: 42px;
+  border-radius: 13px;
+  background: var(--marca-100);
+  color: var(--marca-700);
+  display: grid; place-items: center;
+  font-weight: 700;
+  font-size: 13px;
+}
+
+/* ---------- Detalle ---------- */
+.tarjeta-detalle { margin: 6px 0 4px; border-radius: 18px; text-align: center; }
+
+.icono-grande {
+  width: 66px; height: 66px;
+  border-radius: 20px;
+  background: linear-gradient(145deg, var(--marca-100), #d9f3ef);
+  color: var(--marca-700);
+  display: grid; place-items: center;
+  margin: 6px auto 12px;
+}
+
+.icono-grande ion-icon { font-size: 30px; }
+.tarjeta-detalle ion-card-title { font-size: 20px; letter-spacing: -.02em; }
+.tarjeta-detalle ion-card-subtitle { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; }
+
+.rejilla-cifras { padding: 0; text-align: center; }
+.rejilla-cifras .cifra { font-size: 20px; font-weight: 700; letter-spacing: -.02em; color: #0b1220; }
+.rejilla-cifras .pie { font-size: 11px; color: #5b6b7f; margin-top: 2px; }
+
+.tarjeta-cifras {
+  background: #fff;
+  border-radius: 16px;
+  padding: 14px 0;
+  box-shadow: 0 1px 3px rgba(11, 18, 32, .08);
+}
+
+.rejilla-botones { padding: 6px 0; --ion-grid-column-padding: 4px; }
+
+/* ---------- Escáner ---------- */
+.escaner { --background: #05121a; }
+
+.camara {
+  height: 62%;
+  min-height: 400px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: radial-gradient(520px 380px at 50% 42%, #123240 0%, #071a23 62%, #04101a 100%);
+  overflow: hidden;
+}
+
+.camara::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(45, 212, 191, .05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(45, 212, 191, .05) 1px, transparent 1px);
+  background-size: 32px 32px;
+}
+
+.marco { position: relative; width: 224px; height: 224px; z-index: 2; }
+
+.marco > span {
+  position: absolute;
+  width: 40px; height: 40px;
+  border: 3.5px solid var(--marca-400);
+}
+
+.marco > span:nth-child(1) { top: 0; left: 0; border-right: none; border-bottom: none; border-radius: 20px 0 0 0; }
+.marco > span:nth-child(2) { top: 0; right: 0; border-left: none; border-bottom: none; border-radius: 0 20px 0 0; }
+.marco > span:nth-child(3) { bottom: 0; left: 0; border-right: none; border-top: none; border-radius: 0 0 0 20px; }
+.marco > span:nth-child(4) { bottom: 0; right: 0; border-left: none; border-top: none; border-radius: 0 0 20px 0; }
+
+.rayo {
+  position: absolute;
+  left: 10px; right: 10px;
+  height: 2.5px;
+  background: linear-gradient(90deg, transparent, var(--marca-400), transparent);
+  box-shadow: 0 0 18px var(--marca-400);
+  border-radius: 2px;
+  animation: recorrer 2.4s ease-in-out infinite;
+}
+
+@keyframes recorrer {
+  0%, 100% { top: 16px; opacity: .4; }
+  50% { top: 202px; opacity: 1; }
+}
+
+.codigo-barras {
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  gap: 3px;
+  align-items: center;
+  height: 56px;
+  opacity: .5;
+}
+
+.codigo-barras i { display: block; background: #dbe3ec; border-radius: 1px; }
+
+.mensaje-escaner { z-index: 2; text-align: center; margin-top: 28px; padding: 0 34px; color: #fff; }
+.mensaje-escaner h3 { font-size: 16px; margin: 0 0 6px; }
+.mensaje-escaner p { font-size: 12.5px; color: #7f9ba1; line-height: 1.55; margin: 0; }
+
+.herramientas-escaner { padding: 22px 22px 26px; }
+
+/* ---------- Movimiento ---------- */
+.contador {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 6px 10px 0;
+}
+
+.contador ion-button { --border-radius: 13px; width: 52px; height: 50px; margin: 0; }
+
+.cantidad {
+  flex: 1;
+  text-align: center;
+  font-size: 30px;
+  font-weight: 700;
+  letter-spacing: -.03em;
+  color: #0b1220;
+}
+
+.ayuda-contador { text-align: center; font-size: 12px; color: #5b6b7f; margin: 6px 0 14px; }
+
+.aviso { margin: 8px 0 16px; border-radius: 14px; box-shadow: none; background: #dbeafe; }
+
+.aviso ion-card-content {
+  color: #1e40af;
+  font-size: 12.5px;
+  line-height: 1.55;
+  display: flex;
+  gap: 9px;
+  align-items: flex-start;
+  padding: 13px 14px;
+}
+
+.aviso ion-icon { font-size: 17px; flex: none; margin-top: 1px; }
+
+.aviso.sincronizacion { background: var(--marca-50); }
+.aviso.sincronizacion ion-card-content { color: var(--marca-800); text-align: left; }
+.aviso.sincronizacion ion-icon { color: var(--marca-700); }
+
+.aviso-alerta { margin: 6px 0 14px; border-radius: 14px; }
+.aviso-alerta ion-card-content { display: flex; gap: 9px; align-items: flex-start; font-size: 12.5px; line-height: 1.55; }
+.aviso-alerta ion-icon { font-size: 18px; flex: none; }
+
+/* ---------- Confirmación ---------- */
+.circulo-exito {
+  width: 92px; height: 92px;
+  border-radius: 50%;
+  background: #dcfce7;
+  display: grid; place-items: center;
+  margin: 0 auto 20px;
+  animation: aparecer .45s cubic-bezier(.2, .9, .3, 1.3);
+}
+
+@keyframes aparecer {
+  from { transform: scale(.5); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+.circulo-exito ion-icon { font-size: 46px; color: #16a34a; }
+.bajada-exito { color: #5b6b7f; font-size: 14px; margin: 0 0 18px; }
+.comprobante { text-align: left; margin-bottom: 18px; }
+
+/* ---------- Perfil ---------- */
+.cabecera-perfil {
+  background: linear-gradient(150deg, var(--marca-700), var(--marca-800));
+  color: #fff;
+  padding: 26px 20px 26px;
+  border-radius: 0 0 26px 26px;
+  text-align: center;
+}
+
+.avatar-grande {
+  width: 78px; height: 78px;
+  margin: 0 auto 12px;
+  background: rgba(255, 255, 255, .18);
+  border: 1px solid rgba(255, 255, 255, .24);
+  display: grid; place-items: center;
+}
+
+.avatar-grande span { font-size: 26px; font-weight: 700; color: #fff; }
+.cabecera-perfil h2 { font-size: 20px; margin: 0; letter-spacing: -.02em; }
+.cabecera-perfil p { font-size: 13px; color: #a9d6d0; margin: 5px 0 0; }
+
+.enlaces-pie { text-align: center; margin-top: 18px; }
+
+/* ---------- Barra de pestañas ---------- */
+ion-tab-bar { z-index: 20; }
+
+ion-tab-button.seleccionada { --color: var(--marca-700); --color-selected: var(--marca-700); }
+ion-tab-button.seleccionada ion-icon { color: var(--marca-700); }
+
+/* El escaneo es la acción más repetida, por eso se destaca al centro */
+.pestana-escaner ion-icon {
+  background: linear-gradient(140deg, var(--marca-500), var(--marca-700));
+  color: #fff !important;
+  padding: 9px;
+  border-radius: 14px;
+  font-size: 22px;
+  box-shadow: 0 6px 14px rgba(15, 155, 138, .38);
+}
+
+
+/* ---------- Segmentos ---------- */
+/* Ionic los dibuja como control de píldora en iOS y como pestañas
+   subrayadas en Android. Solo se ajusta el margen. */
+.segmento-categorias { margin-bottom: 12px; }
+.segmento-historial { padding: 0 10px 6px; }
+
+/* ---------- Ajustes de la pantalla de escaneo ---------- */
+.escaner .camara { min-height: 340px; height: 58%; }
+
+/* ---------- Encabezado de artículos ---------- */
+ion-searchbar { --box-shadow: none; }

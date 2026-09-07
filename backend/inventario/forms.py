@@ -1,24 +1,24 @@
-"""Formularios vinculados a los modelos de artículos y categorías."""
+"""Formularios utilizados para crear y modificar datos del inventario."""
 
 from django import forms
 from .models import Articulo, Categoria
 
 
 class ArticuloForm(forms.ModelForm):
-    """Formulario para crear o modificar un artículo."""
+    """Formulario generado a partir del modelo Articulo."""
 
     class Meta:
-        """Indica el modelo y los campos editables desde el formulario."""
+        """Selecciona el modelo y los campos editables del formulario."""
 
         model = Articulo
         fields = ["nombre", "codigo", "descripcion", "stock", "ubicacion", "categoria"]
 
 
 class CategoriaForm(forms.ModelForm):
-    """Formulario para crear o modificar una categoría."""
+    """Formulario generado a partir del modelo Categoria."""
 
     class Meta:
-        """Indica el modelo y los campos editables desde el formulario."""
+        """Selecciona el modelo y los campos editables del formulario."""
 
         model = Categoria
         fields = ["nombre", "descripcion"]
