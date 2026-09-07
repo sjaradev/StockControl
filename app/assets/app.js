@@ -93,8 +93,13 @@
       p.classList.remove("activa");
     });
     destino.classList.add("activa");
-    destino.scrollToTop(0);
     pantallaActual = nombre;
+
+    // El contenido con scroll es el ion-content de cada pantalla
+    var contenido = destino.querySelector("ion-content");
+    if (contenido && contenido.scrollToTop) {
+      contenido.scrollToTop(0);
+    }
 
     var barra = $("#barra-pestanas");
     barra.style.display = CON_PESTANAS.indexOf(nombre) >= 0 ? "flex" : "none";
@@ -107,14 +112,20 @@
 
   /* ---------------- Pintar las listas ---------------- */
 
-  function pintarArticulos(filtro) {
+  var categoriaActiva = "todos";
+  var textoBusqueda = "";
+
+  function pintarArticulos() {
     var lista = $("#lista-articulos");
-    var texto = (filtro || "").toLowerCase();
+    var texto = textoBusqueda.toLowerCase();
 
     var visibles = articulos.filter(function (a) {
-      return !texto ||
+      var coincideTexto = !texto ||
              a.nombre.toLowerCase().indexOf(texto) >= 0 ||
              a.codigo.indexOf(texto) >= 0;
+      var coincideCategoria = categoriaActiva === "todos" ||
+             a.categoria === categoriaActiva;
+      return coincideTexto && coincideCategoria;
     });
 
     if (!visibles.length) {
@@ -304,7 +315,7 @@
     $("#listo-cantidad").textContent = cantidad + " " + articuloElegido.unidad;
     $("#listo-stock").textContent = nuevo + " " + articuloElegido.unidad;
 
-    pintarArticulos($("#buscador") ? $("#buscador").value : "");
+    pintarArticulos();
     pintarHistorial();
     pintarAlertas();
     ir("listo");
@@ -342,35 +353,10 @@
       return;
     }
 
-    // Filtros por categoría
-    var filtro = e.target.closest(".filtro");
-    if (filtro) {
-      document.querySelectorAll(".filtro").forEach(function (c) {
-        c.classList.remove("activo");
-        c.setAttribute("outline", "true");
-      });
-      filtro.classList.add("activo");
-      filtro.removeAttribute("outline");
-      var categoria = filtro.textContent.trim();
-      pintarArticulos(categoria === "Todos" ? "" : "");
-      if (categoria !== "Todos") {
-        var lista = $("#lista-articulos");
-        var coinciden = articulos.filter(function (a) { return a.categoria === categoria; });
-        lista.innerHTML = coinciden.map(function (a) {
-          var estado = estadoDeStock(a);
-          return '<ion-item button data-codigo="' + a.codigo + '">' +
-                 '  <div slot="start" class="cuadro-inicial">' + iniciales(a.nombre) + '</div>' +
-                 '  <ion-label><h4>' + a.nombre + '</h4><p>' + a.codigo + '</p>' +
-                 '  <p>' + a.ubicacion + '</p>' +
-                 '  <span class="estado ' + estado.clase + '">' + estado.texto + '</span></ion-label>' +
-                 '  <ion-note slot="end">' + a.stock + '</ion-note></ion-item>';
-        }).join("");
-      }
-    }
   });
 
   document.addEventListener("DOMContentLoaded", function () {
-    pintarArticulos("");
+    pintarArticulos();
     pintarHistorial();
     pintarAlertas();
     pintarCantidad();
@@ -404,7 +390,22 @@
     });
 
     $("#buscador").addEventListener("ionInput", function (e) {
-      pintarArticulos(e.detail.value);
+      textoBusqueda = e.detail.value || "";
+      pintarArticulos();
+    });
+
+    $("#filtro-categoria").addEventListener("ionChange", function (e) {
+      categoriaActiva = e.detail.value;
+      pintarArticulos();
+    });
+
+    // El botón de volver de Ionic no navega solo en este prototipo,
+    // porque no usamos el enrutador del framework.
+    document.querySelectorAll("ion-back-button[data-ir]").forEach(function (b) {
+      b.addEventListener("click", function (ev) {
+        ev.preventDefault();
+        ir(b.dataset.ir);
+      });
     });
 
     // Los campos del login también responden a la tecla Enter

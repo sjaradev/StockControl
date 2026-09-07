@@ -76,8 +76,9 @@ ion-app {
 }
 
 /* ---------- Cambio entre pantallas ---------- */
-/* Cada pantalla es un ion-content. Fuera de un ion-router-outlet no recibe
-   altura propia, así que se estira sobre el marco del teléfono. */
+/* Cada pantalla replica la estructura de una página de Ionic: una cabecera
+   fija arriba y el contenido debajo. Así ion-header y ion-toolbar reciben el
+   tratamiento propio de cada plataforma. */
 .pantalla {
   display: none;
   position: absolute;
@@ -85,12 +86,17 @@ ion-app {
   left: 0;
   right: 0;
   bottom: 0;
+  flex-direction: column;
 }
 
-.pantalla.activa { display: block; }
+.pantalla.activa { display: flex; }
+.pantalla ion-content { flex: 1 1 auto; }
 .oculto { display: none; }
 
 #app-interna { position: absolute; inset: 0; }
+
+/* La barra de pestañas se reserva su espacio al final de la pantalla */
+#app-interna ion-tab-bar { flex: none; }
 
 /* ---------- Inicio de sesión ---------- */
 .login-fondo {
@@ -187,7 +193,7 @@ ion-app {
 .cabecera-inicio {
   background: linear-gradient(155deg, var(--marca-800), var(--marca-700) 60%, #0f9b8a);
   color: #fff;
-  padding: 54px 20px 24px;
+  padding: 22px 20px 26px;
   border-radius: 0 0 28px 28px;
 }
 
@@ -206,8 +212,6 @@ ion-app {
 .quien small { display: block; font-size: 12.5px; color: #a9d6d0; }
 .quien strong { font-size: 17px; letter-spacing: -.01em; }
 
-.boton-campana { --color: #ffffff; position: relative; }
-.punto-aviso { position: absolute; top: 2px; right: 2px; font-size: 10px; }
 
 .cabecera-inicio h2 { font-size: 24px; margin: 20px 0 6px; letter-spacing: -.02em; }
 
@@ -223,18 +227,9 @@ ion-app {
 .sincronizado ion-icon { font-size: 15px; }
 
 /* ---------- Contenido general ---------- */
-.contenido { padding: 14px 14px 90px; }
+.contenido { padding: 14px 14px 24px; }
 .contenido.centrado { text-align: center; padding-top: 60px; }
 
-.barra-titulo {
-  padding: 52px 20px 6px;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
-
-.barra-titulo h2 { font-size: 24px; margin: 0; letter-spacing: -.02em; }
-.barra-titulo.con-volver h2 { font-size: 19px; }
 
 .titulo-seccion {
   font-size: 16px;
@@ -428,7 +423,7 @@ ion-note[slot="end"] { font-size: 14.5px; font-weight: 700; }
 .mensaje-escaner h3 { font-size: 16px; margin: 0 0 6px; }
 .mensaje-escaner p { font-size: 12.5px; color: #7f9ba1; line-height: 1.55; margin: 0; }
 
-.herramientas-escaner { padding: 22px 22px 96px; }
+.herramientas-escaner { padding: 22px 22px 26px; }
 
 /* ---------- Movimiento ---------- */
 .contador {
@@ -496,7 +491,7 @@ ion-note[slot="end"] { font-size: 14.5px; font-weight: 700; }
 .cabecera-perfil {
   background: linear-gradient(150deg, var(--marca-700), var(--marca-800));
   color: #fff;
-  padding: 60px 20px 26px;
+  padding: 26px 20px 26px;
   border-radius: 0 0 26px 26px;
   text-align: center;
 }
@@ -516,13 +511,7 @@ ion-note[slot="end"] { font-size: 14.5px; font-weight: 700; }
 .enlaces-pie { text-align: center; margin-top: 18px; }
 
 /* ---------- Barra de pestañas ---------- */
-ion-tab-bar {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  z-index: 20;
-}
+ion-tab-bar { z-index: 20; }
 
 ion-tab-button.seleccionada { --color: var(--marca-700); --color-selected: var(--marca-700); }
 ion-tab-button.seleccionada ion-icon { color: var(--marca-700); }
@@ -536,3 +525,16 @@ ion-tab-button.seleccionada ion-icon { color: var(--marca-700); }
   font-size: 22px;
   box-shadow: 0 6px 14px rgba(15, 155, 138, .38);
 }
+
+
+/* ---------- Segmentos ---------- */
+/* Ionic los dibuja como control de píldora en iOS y como pestañas
+   subrayadas en Android. Solo se ajusta el margen. */
+.segmento-categorias { margin-bottom: 12px; }
+.segmento-historial { padding: 0 10px 6px; }
+
+/* ---------- Ajustes de la pantalla de escaneo ---------- */
+.escaner .camara { min-height: 340px; height: 58%; }
+
+/* ---------- Encabezado de artículos ---------- */
+ion-searchbar { --box-shadow: none; }
