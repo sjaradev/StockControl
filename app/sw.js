@@ -10,7 +10,7 @@
    publicados no llegaban al usuario.
    ============================================================ */
 
-const VERSION = "v4";
+const VERSION = "v5";
 const CACHE = "stockcontrol-" + VERSION;
 
 const ARCHIVOS = [
@@ -23,7 +23,8 @@ const ARCHIVOS = [
   "./assets/icon-512.png"
 ];
 
-// Al instalarse, guarda una primera copia de los archivos propios.
+// Al instalarse, guarda una copia de los archivos propios de la aplicación.
+// No se guardan los del CDN: de eso se encarga el navegador.
 self.addEventListener("install", (evento) => {
   evento.waitUntil(
     caches.open(CACHE)
@@ -75,14 +76,9 @@ self.addEventListener("fetch", (evento) => {
     return;
   }
 
-  // Recursos externos como Ionic: primero la copia, porque su
-  // dirección ya incluye el número de versión y no cambia.
-  evento.respondWith(
-    caches.match(evento.request).then((guardado) => {
-      if (guardado) return guardado;
-      return fetch(evento.request)
-        .then((respuesta) => guardarCopia(evento.request, respuesta))
-        .catch(() => guardado);
-    })
-  );
+  // Los archivos de Ionic llegan desde un CDN y el framework los carga en
+  // decenas de fragmentos que resuelve entre sí. Al servirlos desde la
+  // caché, el arranque quedaba a medias y ningún componente se dibujaba.
+  // Por eso el service worker no interviene: el navegador los pide
+  // directamente y aplica su propia caché, que sí los maneja bien.
 });

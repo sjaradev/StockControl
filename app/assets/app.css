@@ -33,6 +33,11 @@
   --marca-50: #f0fdfa;
 }
 
+/* Ionic oculta el body hasta terminar de inicializarse. Si por alguna
+   razón no alcanza a hacerlo, la pantalla quedaría en blanco, así que
+   se deja visible igualmente. */
+html:not(.hydrated) body { display: flex !important; }
+
 /* El prototipo se muestra dentro de un marco de teléfono cuando
    se abre desde un computador, y a pantalla completa en el móvil. */
 body {

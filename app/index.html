@@ -13,18 +13,29 @@
 
 <!-- Ionic: framework híbrido para iOS y Android -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@ionic/core@7.8.6/css/ionic.bundle.css">
-<link rel="stylesheet" href="assets/app.css?v=3">
+<link rel="stylesheet" href="assets/app.css?v=6">
 
 <script>
   // El modo define si Ionic dibuja la interfaz con el estilo de iOS o el de
-  // Android. Se puede forzar con ?modo=ios o ?modo=android y queda guardado.
+  // Android. Ionic lee el parámetro "ionic:mode" de la dirección, que es su
+  // mecanismo propio; por eso aquí solo se traduce la preferencia guardada
+  // y se agrega ese parámetro si falta.
   (function () {
     var params = new URLSearchParams(location.search);
-    var elegido = params.get('modo') || localStorage.getItem('sc_modo') || 'ios';
+    var pedido = params.get('modo');
+    var guardado = localStorage.getItem('sc_modo');
+    var elegido = pedido || guardado || 'ios';
     var modo = (elegido === 'android' || elegido === 'md') ? 'md' : 'ios';
+
     localStorage.setItem('sc_modo', modo === 'md' ? 'android' : 'ios');
-    window.Ionic = { config: { mode: modo } };
     document.documentElement.dataset.modo = modo;
+
+    // Una sola redirección, y solo si el parámetro todavía no está puesto.
+    if (params.get('ionic:mode') !== modo) {
+      params.set('ionic:mode', modo);
+      params.delete('modo');
+      location.replace(location.pathname + '?' + params.toString());
+    }
   })();
 </script>
 </head>
@@ -586,6 +597,6 @@
 
 <script type="module" src="https://cdn.jsdelivr.net/npm/@ionic/core@7.8.6/dist/ionic/ionic.esm.js"></script>
 <script nomodule src="https://cdn.jsdelivr.net/npm/@ionic/core@7.8.6/dist/ionic/ionic.js"></script>
-<script src="assets/app.js?v=3"></script>
+<script src="assets/app.js?v=6"></script>
 </body>
 </html>

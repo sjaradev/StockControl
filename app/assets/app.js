@@ -255,8 +255,9 @@
 
   function aplicarModo(nuevo) {
     localStorage.setItem("sc_modo", nuevo);
-    // Ionic define el estilo al cargar, por eso se recarga la página.
-    location.search = "?modo=" + nuevo;
+    // Ionic define el estilo al cargar, por eso se recarga la página
+    // usando su propio parámetro.
+    location.search = "?ionic:mode=" + (nuevo === "android" ? "md" : "ios");
   }
 
   function cambiarModo() {
