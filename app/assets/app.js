@@ -247,21 +247,15 @@
     var texto = modoActual() === "android" ? "Android" : "iOS";
     var enLogin = $("#modo-actual");
     var enPerfil = $("#modo-perfil");
-    var enInicio = $("#modo-inicio");
     if (enLogin) enLogin.textContent = texto;
     if (enPerfil) enPerfil.textContent = texto;
-    if (enInicio) enInicio.textContent = texto;
-  }
-
-  function aplicarModo(nuevo) {
-    localStorage.setItem("sc_modo", nuevo);
-    // Ionic define el estilo al cargar, por eso se recarga la página
-    // usando su propio parámetro.
-    location.search = "?ionic:mode=" + (nuevo === "android" ? "md" : "ios");
   }
 
   function cambiarModo() {
-    aplicarModo(modoActual() === "android" ? "ios" : "android");
+    var nuevo = modoActual() === "android" ? "ios" : "android";
+    localStorage.setItem("sc_modo", nuevo);
+    // Ionic define el estilo al cargar, por eso se recarga la página.
+    location.search = "?modo=" + nuevo;
   }
 
   /* ---------------- Instalación como aplicación ---------------- */
@@ -297,40 +291,6 @@
     tipoMovimiento = tipo;
     var segmento = $("#tipo-movimiento");
     if (segmento) segmento.value = tipo;
-  }
-
-  // Ionic dibuja este cuadro con el aspecto de cada sistema: en iOS
-  // aparece centrado y redondeado, y en Android con el estilo Material.
-  async function preguntarAntesDeGuardar() {
-    var alerta = document.createElement("ion-alert");
-    alerta.header = "Confirmar " + NOMBRE_TIPO[tipoMovimiento].toLowerCase();
-    alerta.message = cantidad + " " + articuloElegido.unidad + " de " +
-                     articuloElegido.nombre + ".";
-    alerta.buttons = [
-      { text: "Cancelar", role: "cancel" },
-      { text: "Confirmar", role: "confirm", handler: function () { confirmarMovimiento(); } }
-    ];
-    document.body.appendChild(alerta);
-    await alerta.present();
-  }
-
-  // Hoja de acciones para elegir el estilo de interfaz. En iOS sube desde
-  // abajo con esquinas redondeadas; en Android es una lista Material.
-  async function elegirEstilo() {
-    var hoja = document.createElement("ion-action-sheet");
-    hoja.header = "Estilo de interfaz";
-    hoja.subHeader = "El mismo código, dibujado por Ionic según la plataforma";
-    hoja.buttons = [
-      { text: "iOS", icon: "logo-apple", data: "ios" },
-      { text: "Android", icon: "logo-android", data: "android" },
-      { text: "Cancelar", role: "cancel" }
-    ];
-    document.body.appendChild(hoja);
-    await hoja.present();
-    var elegido = await hoja.onDidDismiss();
-    if (elegido.data && elegido.data !== modoActual()) {
-      aplicarModo(elegido.data);
-    }
   }
 
   function confirmarMovimiento() {
@@ -395,24 +355,8 @@
 
   });
 
-  // Se conecta cada control por separado. Si alguno falla, el resto
-  // sigue funcionando: así un detalle menor nunca deja la aplicación
-  // entera sin responder.
-  function conectar(selector, evento, accion) {
-    try {
-      var el = $(selector);
-      if (el) el.addEventListener(evento, accion);
-    } catch (e) {
-      // Un control que no se pudo conectar no debe detener a los demás.
-    }
-  }
-
-  function arrancar() {
-    // Lo primero es el acceso, que es lo que el usuario necesita sí o sí.
-    conectar("#boton-entrar", "click", validarAcceso);
-
-    try {
-      pintarArticulos();
+  document.addEventListener("DOMContentLoaded", function () {
+    pintarArticulos();
     pintarHistorial();
     pintarAlertas();
     pintarCantidad();
@@ -420,38 +364,37 @@
     dibujarCodigoBarras();
     ir("login");
 
-    conectar("#cerrar-sesion", "click", cerrarSesion);
-    conectar("#chip-modo", "click", cambiarModo);
-    conectar("#item-modo", "click", elegirEstilo);
-    conectar("#tarjeta-modo", "click", elegirEstilo);
-    conectar("#boton-modo-barra", "click", elegirEstilo);
-    conectar("#item-instalar", "click", instalar);
+    $("#boton-entrar").addEventListener("click", validarAcceso);
+    $("#cerrar-sesion").addEventListener("click", cerrarSesion);
+    $("#chip-modo").addEventListener("click", cambiarModo);
+    $("#item-modo").addEventListener("click", cambiarModo);
+    $("#item-instalar").addEventListener("click", instalar);
 
-    conectar("#menos", "click", function () {
+    $("#menos").addEventListener("click", function () {
       if (cantidad > 1) { cantidad--; pintarCantidad(); }
     });
-    conectar("#mas", "click", function () {
+    $("#mas").addEventListener("click", function () {
       if (cantidad < 999) { cantidad++; pintarCantidad(); }
     });
 
-    conectar("#tipo-movimiento", "ionChange", function (e) {
+    $("#tipo-movimiento").addEventListener("ionChange", function (e) {
       tipoMovimiento = e.detail.value;
     });
 
-    conectar("#confirmar-movimiento", "click", preguntarAntesDeGuardar);
+    $("#confirmar-movimiento").addEventListener("click", confirmarMovimiento);
 
-    conectar("#boton-escanear", "click", function () {
+    $("#boton-escanear").addEventListener("click", function () {
       var azar = articulos[Math.floor(Math.random() * articulos.length)];
       avisar("Artículo identificado: " + azar.nombre, "success");
       abrirDetalle(azar.codigo);
     });
 
-    conectar("#buscador", "ionInput", function (e) {
+    $("#buscador").addEventListener("ionInput", function (e) {
       textoBusqueda = e.detail.value || "";
       pintarArticulos();
     });
 
-    conectar("#filtro-categoria", "ionChange", function (e) {
+    $("#filtro-categoria").addEventListener("ionChange", function (e) {
       categoriaActiva = e.detail.value;
       pintarArticulos();
     });
@@ -465,27 +408,16 @@
       });
     });
 
-      // Los campos del login también responden a la tecla Enter
-      ["#usuario", "#clave"].forEach(function (sel) {
-        conectar(sel, "keydown", function (e) {
-          if (e.key === "Enter") validarAcceso();
-        });
-        conectar(sel, "ionInput", function () {
-          $("#error-login").classList.remove("visible");
-        });
+    // Los campos del login también responden a la tecla Enter
+    ["#usuario", "#clave"].forEach(function (sel) {
+      $(sel).addEventListener("keydown", function (e) {
+        if (e.key === "Enter") validarAcceso();
       });
-    } catch (e) {
-      // Si algo del arranque falla, el acceso ya quedó conectado arriba.
-    }
-  }
-
-  // Arranca en cuanto el documento esté listo, sin importar si el script
-  // se cargó antes o después de que el navegador terminara de leerlo.
-  if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", arrancar);
-  } else {
-    arrancar();
-  }
+      $(sel).addEventListener("ionInput", function () {
+        $("#error-login").classList.remove("visible");
+      });
+    });
+  });
 
   /* ---------------- Registro del service worker ---------------- */
 

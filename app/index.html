@@ -13,29 +13,18 @@
 
 <!-- Ionic: framework híbrido para iOS y Android -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@ionic/core@7.8.6/css/ionic.bundle.css">
-<link rel="stylesheet" href="assets/app.css?v=7">
+<link rel="stylesheet" href="assets/app.css">
 
 <script>
   // El modo define si Ionic dibuja la interfaz con el estilo de iOS o el de
-  // Android. Ionic lee el parámetro "ionic:mode" de la dirección, que es su
-  // mecanismo propio; por eso aquí solo se traduce la preferencia guardada
-  // y se agrega ese parámetro si falta.
+  // Android. Se puede forzar con ?modo=ios o ?modo=android y queda guardado.
   (function () {
     var params = new URLSearchParams(location.search);
-    var pedido = params.get('modo');
-    var guardado = localStorage.getItem('sc_modo');
-    var elegido = pedido || guardado || 'ios';
+    var elegido = params.get('modo') || localStorage.getItem('sc_modo') || 'ios';
     var modo = (elegido === 'android' || elegido === 'md') ? 'md' : 'ios';
-
     localStorage.setItem('sc_modo', modo === 'md' ? 'android' : 'ios');
+    window.Ionic = { config: { mode: modo } };
     document.documentElement.dataset.modo = modo;
-
-    // Una sola redirección, y solo si el parámetro todavía no está puesto.
-    if (params.get('ionic:mode') !== modo) {
-      params.set('ionic:mode', modo);
-      params.delete('modo');
-      location.replace(location.pathname + '?' + params.toString());
-    }
   })();
 </script>
 </head>
@@ -98,12 +87,18 @@
 
     <!-- ---------- Inicio ---------- -->
     <div class="pantalla" id="pantalla-inicio">
+      <ion-header>
+        <ion-toolbar color="primary">
+          <ion-title>Inicio</ion-title>
+          <ion-buttons slot="end">
+            <ion-button data-ir="alertas">
+              <ion-icon slot="icon-only" name="notifications-outline"></ion-icon>
+            </ion-button>
+          </ion-buttons>
+        </ion-toolbar>
+      </ion-header>
+
       <ion-content>
-      <div class="barra-titulo">
-          <h2>Inicio</h2>
-          <button class="icono-barra" id="boton-modo-barra" aria-label="Cambiar estilo de interfaz"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="6" y="2" width="12" height="20" rx="3"/><path d="M11 18h2"/></svg></button>
-          <button class="icono-barra" data-ir="alertas" aria-label="Alertas"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 8A6 6 0 106 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 01-3.4 0"/></svg></button>
-        </div>
         <div class="cabecera-inicio">
           <div class="fila-saludo">
             <ion-avatar class="avatar-usuario"><span>RR</span></ion-avatar>
@@ -117,16 +112,6 @@
             <ion-icon name="sync-outline"></ion-icon>
             Sincronizado con la plataforma web hace 2 minutos
           </p>
-        </div>
-
-        <div class="contenido">
-          <ion-card class="aviso modo" button id="tarjeta-modo">
-            <ion-card-content>
-              <ion-icon name="phone-portrait-outline"></ion-icon>
-              <span>Interfaz <b id="modo-inicio">iOS</b>. Ionic dibuja estas mismas
-                pantallas con el estilo de cada sistema. Toca para cambiar.</span>
-            </ion-card-content>
-          </ion-card>
         </div>
 
         <div class="contenido">
@@ -221,13 +206,21 @@
 
     <!-- ---------- Artículos ---------- -->
     <div class="pantalla" id="pantalla-articulos">
-      <ion-content>
-      <div class="barra-titulo">
-          <h2>Artículos</h2>
-        </div>
-        <div class="contenido">
-          <ion-searchbar placeholder="Buscar por nombre o código" id="buscador" animated></ion-searchbar>
+      <ion-header>
+        <ion-toolbar color="primary">
+          <ion-title>Artículos</ion-title>
+          <ion-buttons slot="end">
+            <ion-button><ion-icon slot="icon-only" name="funnel-outline"></ion-icon></ion-button>
+          </ion-buttons>
+        </ion-toolbar>
+        <ion-toolbar color="primary">
+          <ion-searchbar placeholder="Buscar por nombre o código" id="buscador"
+                         animated></ion-searchbar>
+        </ion-toolbar>
+      </ion-header>
 
+      <ion-content>
+        <div class="contenido">
           <ion-segment value="todos" class="segmento-categorias" id="filtro-categoria" scrollable>
             <ion-segment-button value="todos"><ion-label>Todos</ion-label></ion-segment-button>
             <ion-segment-button value="Herramientas"><ion-label>Herramientas</ion-label></ion-segment-button>
@@ -242,11 +235,16 @@
 
     <!-- ---------- Detalle ---------- -->
     <div class="pantalla" id="pantalla-detalle">
+      <ion-header>
+        <ion-toolbar color="primary">
+          <ion-buttons slot="start">
+            <ion-back-button default-href="#" text="Artículos" data-ir="articulos"></ion-back-button>
+          </ion-buttons>
+          <ion-title>Detalle</ion-title>
+        </ion-toolbar>
+      </ion-header>
+
       <ion-content>
-      <div class="barra-titulo">
-          <button class="icono-barra volver" data-ir="articulos" aria-label="Volver"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg></button>
-          <h2>Detalle</h2>
-        </div>
         <div class="contenido">
           <ion-card class="tarjeta-detalle">
             <ion-card-header>
@@ -306,11 +304,16 @@
 
     <!-- ---------- Escáner ---------- -->
     <div class="pantalla" id="pantalla-escaner">
+      <ion-header>
+        <ion-toolbar color="dark">
+          <ion-buttons slot="start">
+            <ion-back-button default-href="#" text="Inicio" data-ir="inicio"></ion-back-button>
+          </ion-buttons>
+          <ion-title>Escanear</ion-title>
+        </ion-toolbar>
+      </ion-header>
+
       <ion-content class="escaner">
-      <div class="barra-titulo">
-          <button class="icono-barra volver" data-ir="inicio" aria-label="Volver"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg></button>
-          <h2>Escanear</h2>
-        </div>
         <div class="camara">
           <div class="marco">
             <span></span><span></span><span></span><span></span>
@@ -336,11 +339,16 @@
 
     <!-- ---------- Movimiento ---------- -->
     <div class="pantalla" id="pantalla-movimiento">
+      <ion-header>
+        <ion-toolbar color="primary">
+          <ion-buttons slot="start">
+            <ion-back-button default-href="#" text="Volver" data-ir="inicio"></ion-back-button>
+          </ion-buttons>
+          <ion-title>Registrar movimiento</ion-title>
+        </ion-toolbar>
+      </ion-header>
+
       <ion-content>
-      <div class="barra-titulo">
-          <button class="icono-barra volver" data-ir="inicio" aria-label="Volver"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg></button>
-          <h2>Registrar movimiento</h2>
-        </div>
         <div class="contenido">
           <ion-segment value="entrada" id="tipo-movimiento">
             <ion-segment-button value="entrada"><ion-label>Entrada</ion-label></ion-segment-button>
@@ -394,10 +402,13 @@
 
     <!-- ---------- Confirmación ---------- -->
     <div class="pantalla" id="pantalla-listo">
+      <ion-header>
+        <ion-toolbar color="primary">
+          <ion-title>Movimiento registrado</ion-title>
+        </ion-toolbar>
+      </ion-header>
+
       <ion-content>
-      <div class="barra-titulo">
-          <h2>Movimiento registrado</h2>
-        </div>
         <div class="contenido centrado">
           <div class="circulo-exito"><ion-icon name="checkmark"></ion-icon></div>
           <h2>¡Listo!</h2>
@@ -424,17 +435,21 @@
 
     <!-- ---------- Historial ---------- -->
     <div class="pantalla" id="pantalla-historial">
-      <ion-content>
-      <div class="barra-titulo">
-          <h2>Movimientos</h2>
-        </div>
-        <div class="contenido">
+      <ion-header>
+        <ion-toolbar color="primary">
+          <ion-title>Movimientos</ion-title>
+        </ion-toolbar>
+        <ion-toolbar color="primary">
           <ion-segment value="hoy" class="segmento-historial">
             <ion-segment-button value="hoy"><ion-label>Hoy</ion-label></ion-segment-button>
             <ion-segment-button value="semana"><ion-label>Semana</ion-label></ion-segment-button>
             <ion-segment-button value="mes"><ion-label>Mes</ion-label></ion-segment-button>
           </ion-segment>
+        </ion-toolbar>
+      </ion-header>
 
+      <ion-content>
+        <div class="contenido">
           <ion-list id="lista-historial" inset></ion-list>
         </div>
       </ion-content>
@@ -442,11 +457,16 @@
 
     <!-- ---------- Alertas ---------- -->
     <div class="pantalla" id="pantalla-alertas">
+      <ion-header>
+        <ion-toolbar color="warning">
+          <ion-buttons slot="start">
+            <ion-back-button default-href="#" text="Inicio" data-ir="inicio"></ion-back-button>
+          </ion-buttons>
+          <ion-title>Alertas</ion-title>
+        </ion-toolbar>
+      </ion-header>
+
       <ion-content>
-      <div class="barra-titulo">
-          <button class="icono-barra volver" data-ir="inicio" aria-label="Volver"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg></button>
-          <h2>Alertas</h2>
-        </div>
         <div class="contenido">
           <ion-card color="warning" class="aviso-alerta"><ion-card-content>
             <ion-icon name="warning-outline"></ion-icon>
@@ -459,10 +479,13 @@
 
     <!-- ---------- Perfil ---------- -->
     <div class="pantalla" id="pantalla-perfil">
+      <ion-header>
+        <ion-toolbar color="primary">
+          <ion-title>Perfil</ion-title>
+        </ion-toolbar>
+      </ion-header>
+
       <ion-content>
-      <div class="barra-titulo">
-          <h2>Perfil</h2>
-        </div>
         <div class="cabecera-perfil">
           <ion-avatar class="avatar-grande"><span>RR</span></ion-avatar>
           <h2>Rodrigo Rivas Riffo</h2>
@@ -550,6 +573,6 @@
 
 <script type="module" src="https://cdn.jsdelivr.net/npm/@ionic/core@7.8.6/dist/ionic/ionic.esm.js"></script>
 <script nomodule src="https://cdn.jsdelivr.net/npm/@ionic/core@7.8.6/dist/ionic/ionic.js"></script>
-<script src="assets/app.js?v=7"></script>
+<script src="assets/app.js"></script>
 </body>
 </html>

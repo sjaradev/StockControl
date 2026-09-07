@@ -1,17 +1,11 @@
 /* ============================================================
    StockControl — service worker
-
-   Guarda una copia de la aplicación para que pueda abrirse sin
-   conexión, que es una situación habitual dentro de una bodega.
-
-   Importante: para los archivos propios se consulta primero la
-   red. Con la estrategia contraria, una vez guardada la copia el
-   navegador nunca volvía a pedir los archivos y los cambios
-   publicados no llegaban al usuario.
+   Guarda una copia de los archivos de la aplicación para que
+   pueda abrirse aunque el teléfono no tenga conexión, que es
+   una situación habitual dentro de una bodega.
    ============================================================ */
 
-const VERSION = "v5";
-const CACHE = "stockcontrol-" + VERSION;
+const CACHE = "stockcontrol-v1";
 
 const ARCHIVOS = [
   "./",
@@ -23,21 +17,16 @@ const ARCHIVOS = [
   "./assets/icon-512.png"
 ];
 
-// Al instalarse, guarda una copia de los archivos propios de la aplicación.
-// No se guardan los del CDN: de eso se encarga el navegador.
+// Al instalarse, guarda los archivos propios de la aplicación.
 self.addEventListener("install", (evento) => {
   evento.waitUntil(
     caches.open(CACHE)
-      // "reload" obliga a pedir cada archivo al servidor, sin usar la
-      // copia que el navegador pueda tener guardada.
-      .then((cache) => cache.addAll(
-        ARCHIVOS.map((ruta) => new Request(ruta, { cache: "reload" }))
-      ))
+      .then((cache) => cache.addAll(ARCHIVOS))
       .then(() => self.skipWaiting())
   );
 });
 
-// Al activarse, elimina las versiones anteriores de la caché.
+// Al activarse, elimina versiones anteriores de la caché.
 self.addEventListener("activate", (evento) => {
   evento.waitUntil(
     caches.keys()
@@ -48,37 +37,24 @@ self.addEventListener("activate", (evento) => {
   );
 });
 
-function guardarCopia(peticion, respuesta) {
-  if (respuesta && respuesta.ok) {
-    const copia = respuesta.clone();
-    caches.open(CACHE).then((cache) => cache.put(peticion, copia));
-  }
-  return respuesta;
-}
-
+// Responde primero desde la caché y, si no está, va a la red.
 self.addEventListener("fetch", (evento) => {
   if (evento.request.method !== "GET") return;
 
-  const url = new URL(evento.request.url);
-  const esPropio = url.origin === self.location.origin;
+  evento.respondWith(
+    caches.match(evento.request).then((guardado) => {
+      if (guardado) return guardado;
 
-  if (esPropio) {
-    // Archivos de la aplicación: primero la red, para que cada
-    // publicación se vea de inmediato. Si no hay señal, la copia.
-    // "no-cache" obliga a preguntar al servidor si el archivo cambió.
-    const fresca = new Request(evento.request.url, { cache: "no-cache" });
-    evento.respondWith(
-      fetch(fresca)
-        .then((respuesta) => guardarCopia(evento.request, respuesta))
-        .catch(() => caches.match(evento.request)
-          .then((guardado) => guardado || caches.match("./index.html")))
-    );
-    return;
-  }
-
-  // Los archivos de Ionic llegan desde un CDN y el framework los carga en
-  // decenas de fragmentos que resuelve entre sí. Al servirlos desde la
-  // caché, el arranque quedaba a medias y ningún componente se dibujaba.
-  // Por eso el service worker no interviene: el navegador los pide
-  // directamente y aplica su propia caché, que sí los maneja bien.
+      return fetch(evento.request)
+        .then((respuesta) => {
+          // Guarda también los archivos de Ionic que llegan del CDN.
+          if (respuesta.ok && evento.request.url.startsWith("http")) {
+            const copia = respuesta.clone();
+            caches.open(CACHE).then((cache) => cache.put(evento.request, copia));
+          }
+          return respuesta;
+        })
+        .catch(() => caches.match("./index.html"));
+    })
+  );
 });
