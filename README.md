@@ -4,12 +4,12 @@ Sistema de control de inventario para pequeñas y medianas empresas.
 Proyecto de la asignatura **APTC106 - Taller de Desarrollo Web y Móvil**,
 Universidad Andrés Bello.
 
-**Sitio publicado:** https://sjaradev.github.io/stockcontrol/
+**Sitio publicado:** https://sjaradev.github.io/StockControl/
 
 | Prototipo | Enlace directo |
 |---|---|
-| Aplicación móvil (Ionic) | https://sjaradev.github.io/stockcontrol/app/ |
-| Plataforma web | https://sjaradev.github.io/stockcontrol/web.html |
+| Aplicación móvil (Ionic) | https://sjaradev.github.io/StockControl/app/ |
+| Plataforma web | https://sjaradev.github.io/StockControl/web.html |
 
 **Cuenta de prueba en ambos:** usuario `demo` / contraseña `demo`
 
@@ -50,7 +50,7 @@ app/index.html?modo=android
 La aplicación es una PWA, así que se instala desde el navegador sin pasar por App Store
 ni Google Play:
 
-1. Abre https://sjaradev.github.io/stockcontrol/app/ en el teléfono.
+1. Abre https://sjaradev.github.io/StockControl/app/ en el teléfono.
 2. En Android, toca el menú del navegador y elige **Instalar aplicación**.
    En iPhone, toca **Compartir** y luego **Agregar a pantalla de inicio**.
 3. Queda con su propio icono y se abre a pantalla completa.
