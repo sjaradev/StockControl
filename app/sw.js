@@ -5,7 +5,7 @@
    una situación habitual dentro de una bodega.
    ============================================================ */
 
-const CACHE = "stockcontrol-v1";
+const CACHE = "stockcontrol-v3";
 
 const ARCHIVOS = [
   "./",
