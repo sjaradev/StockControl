@@ -84,13 +84,9 @@ ion-app {
 /* Cada pantalla replica la estructura de una página de Ionic: una cabecera
    fija arriba y el contenido debajo. Así ion-header y ion-toolbar reciben el
    tratamiento propio de cada plataforma. */
-.pantalla {
-  display: none;
-  flex-direction: column;
-}
-
-.pantalla.activa { display: flex; }
-.pantalla ion-content { flex: 1 1 auto; min-height: 0; }
+.pantalla { display: none; }
+.pantalla.activa { display: block; }
+.pantalla > ion-content { position: absolute; top: 0; left: 0; right: 0; bottom: 0; }
 .oculto { display: none; }
 
 /* La pantalla de acceso ocupa todo el marco, porque no lleva pestañas */
@@ -119,6 +115,8 @@ ion-app {
   flex: 1 1 auto;
   min-height: 0;
 }
+
+#app-interna .pantalla > ion-content { position: absolute; inset: 0; }
 
 #app-interna ion-tab-bar { flex: none; }
 
@@ -577,3 +575,42 @@ ion-searchbar { --box-shadow: none; }
 
 .aviso.modo ion-icon { color: var(--marca-700); font-size: 20px; }
 .aviso.modo b { font-weight: 700; }
+
+
+/* ---------- Barra de título de cada pantalla ---------- */
+.barra-titulo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 16px 16px 4px;
+}
+
+.barra-titulo h2 {
+  font-size: 24px;
+  margin: 0;
+  letter-spacing: -.02em;
+  margin-right: auto;
+}
+
+.barra-titulo .volver + h2 { font-size: 19px; }
+
+.icono-barra {
+  width: 38px;
+  height: 38px;
+  flex: none;
+  border-radius: 12px;
+  border: 1px solid var(--ion-color-step-150, #e0e4ea);
+  background: #fff;
+  color: var(--marca-700);
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  padding: 0;
+}
+
+.icono-barra svg { width: 18px; height: 18px; }
+.icono-barra:active { transform: scale(.94); }
+
+/* En el escáner la barra va sobre fondo oscuro */
+.escaner .barra-titulo h2 { color: #fff; }
+.escaner .icono-barra { background: rgba(255,255,255,.12); border-color: rgba(255,255,255,.2); color: #fff; }

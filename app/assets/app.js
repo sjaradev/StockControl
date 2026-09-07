@@ -395,8 +395,24 @@
 
   });
 
-  document.addEventListener("DOMContentLoaded", function () {
-    pintarArticulos();
+  // Se conecta cada control por separado. Si alguno falla, el resto
+  // sigue funcionando: así un detalle menor nunca deja la aplicación
+  // entera sin responder.
+  function conectar(selector, evento, accion) {
+    try {
+      var el = $(selector);
+      if (el) el.addEventListener(evento, accion);
+    } catch (e) {
+      // Un control que no se pudo conectar no debe detener a los demás.
+    }
+  }
+
+  function arrancar() {
+    // Lo primero es el acceso, que es lo que el usuario necesita sí o sí.
+    conectar("#boton-entrar", "click", validarAcceso);
+
+    try {
+      pintarArticulos();
     pintarHistorial();
     pintarAlertas();
     pintarCantidad();
@@ -404,39 +420,38 @@
     dibujarCodigoBarras();
     ir("login");
 
-    $("#boton-entrar").addEventListener("click", validarAcceso);
-    $("#cerrar-sesion").addEventListener("click", cerrarSesion);
-    $("#chip-modo").addEventListener("click", cambiarModo);
-    $("#item-modo").addEventListener("click", elegirEstilo);
-    $("#tarjeta-modo").addEventListener("click", elegirEstilo);
-    $("#boton-modo-barra").addEventListener("click", elegirEstilo);
-    $("#item-instalar").addEventListener("click", instalar);
+    conectar("#cerrar-sesion", "click", cerrarSesion);
+    conectar("#chip-modo", "click", cambiarModo);
+    conectar("#item-modo", "click", elegirEstilo);
+    conectar("#tarjeta-modo", "click", elegirEstilo);
+    conectar("#boton-modo-barra", "click", elegirEstilo);
+    conectar("#item-instalar", "click", instalar);
 
-    $("#menos").addEventListener("click", function () {
+    conectar("#menos", "click", function () {
       if (cantidad > 1) { cantidad--; pintarCantidad(); }
     });
-    $("#mas").addEventListener("click", function () {
+    conectar("#mas", "click", function () {
       if (cantidad < 999) { cantidad++; pintarCantidad(); }
     });
 
-    $("#tipo-movimiento").addEventListener("ionChange", function (e) {
+    conectar("#tipo-movimiento", "ionChange", function (e) {
       tipoMovimiento = e.detail.value;
     });
 
-    $("#confirmar-movimiento").addEventListener("click", preguntarAntesDeGuardar);
+    conectar("#confirmar-movimiento", "click", preguntarAntesDeGuardar);
 
-    $("#boton-escanear").addEventListener("click", function () {
+    conectar("#boton-escanear", "click", function () {
       var azar = articulos[Math.floor(Math.random() * articulos.length)];
       avisar("Artículo identificado: " + azar.nombre, "success");
       abrirDetalle(azar.codigo);
     });
 
-    $("#buscador").addEventListener("ionInput", function (e) {
+    conectar("#buscador", "ionInput", function (e) {
       textoBusqueda = e.detail.value || "";
       pintarArticulos();
     });
 
-    $("#filtro-categoria").addEventListener("ionChange", function (e) {
+    conectar("#filtro-categoria", "ionChange", function (e) {
       categoriaActiva = e.detail.value;
       pintarArticulos();
     });
@@ -450,16 +465,27 @@
       });
     });
 
-    // Los campos del login también responden a la tecla Enter
-    ["#usuario", "#clave"].forEach(function (sel) {
-      $(sel).addEventListener("keydown", function (e) {
-        if (e.key === "Enter") validarAcceso();
+      // Los campos del login también responden a la tecla Enter
+      ["#usuario", "#clave"].forEach(function (sel) {
+        conectar(sel, "keydown", function (e) {
+          if (e.key === "Enter") validarAcceso();
+        });
+        conectar(sel, "ionInput", function () {
+          $("#error-login").classList.remove("visible");
+        });
       });
-      $(sel).addEventListener("ionInput", function () {
-        $("#error-login").classList.remove("visible");
-      });
-    });
-  });
+    } catch (e) {
+      // Si algo del arranque falla, el acceso ya quedó conectado arriba.
+    }
+  }
+
+  // Arranca en cuanto el documento esté listo, sin importar si el script
+  // se cargó antes o después de que el navegador terminara de leerlo.
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", arrancar);
+  } else {
+    arrancar();
+  }
 
   /* ---------------- Registro del service worker ---------------- */
 
